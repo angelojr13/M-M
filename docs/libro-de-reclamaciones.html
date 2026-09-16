@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Libro de Reclamaciones | MACHES</title>
+<meta name="description" content="Libro de Reclamaciones virtual de MACHES. Registra tu reclamo o queja conforme al Código de Protección y Defensa del Consumidor.">
+<meta name="theme-color" content="#0a0808">
+<link rel="icon" type="image/png" href="assets/maches-logo-white.png">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+<a class="skip-link" href="#main">Saltar al contenido principal</a>
+
+<!-- ============ HEADER ============ -->
+<header class="site-header" id="siteHeader">
+  <div class="container header-inner">
+    <a href="index.html#top" class="brand" aria-label="MACHES, inicio">
+      <img class="brand-mark" src="assets/maches-icon.png" alt="" width="44" height="44">
+      <span class="brand-name">MACHES</span>
+    </a>
+
+    <nav class="main-nav" id="mainNav" aria-label="Navegación principal">
+      <a href="index.html#top">Inicio</a>
+      <a href="index.html#origen">Nuestro Origen</a>
+      <a href="index.html#lineas-negocio">Líneas de Negocio</a>
+      <a href="index.html#sostenibilidad">Sostenibilidad</a>
+    </nav>
+
+    <div class="header-actions">
+      <a class="btn btn-fucsia header-contacto" data-whatsapp-cta="header" href="#" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2.05 22l5.29-1.39a9.9 9.9 0 0 0 4.7 1.2h.01c5.46 0 9.9-4.45 9.9-9.9C21.96 6.45 17.5 2 12.04 2Zm5.8 14.16c-.24.68-1.4 1.3-1.93 1.38-.5.08-1.12.11-1.8-.11-.42-.13-.95-.3-1.64-.6-2.88-1.24-4.76-4.13-4.9-4.32-.14-.19-1.17-1.56-1.17-2.98 0-1.42.75-2.11 1.01-2.4.27-.28.58-.35.78-.35.2 0 .39 0 .56.01.18.01.42-.07.66.5.24.6.83 2.06.9 2.21.07.15.12.33.02.53-.1.19-.15.31-.29.48-.15.17-.31.38-.44.51-.15.15-.3.31-.13.6.17.29.75 1.24 1.62 2.01 1.11.99 2.05 1.3 2.34 1.45.29.15.46.13.63-.07.17-.2.72-.84.92-1.13.19-.29.39-.24.65-.14.27.1 1.7.8 1.99.95.29.15.49.22.56.34.08.13.08.72-.16 1.4Z"/></svg>
+        <span>Contacto</span>
+      </a>
+      <button class="menu-toggle" id="menuToggle" aria-expanded="false" aria-controls="mainNav" aria-label="Abrir menú de navegación">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+  <!-- ============ ENCABEZADO DE LA PÁGINA ============ -->
+  <section class="legal-hero">
+    <div class="container">
+      <p class="section-kicker">Atención al Consumidor</p>
+      <h1 class="section-title">Libro de Reclamaciones</h1>
+    </div>
+  </section>
+
+  <!-- ============ CONTENIDO ============ -->
+  <section class="legal-content">
+    <div class="container">
+      <p>
+        Conforme al Código de Protección y Defensa del Consumidor (Ley N.º 29571) y su reglamento,
+        MACHES pone a tu disposición este Libro de Reclamaciones virtual para que puedas registrar
+        tu <strong>reclamo</strong> (disconformidad relacionada a los productos o servicios) o tu
+        <strong>queja</strong> (disconformidad no relacionada a los productos o servicios, o
+        malestar respecto a la atención al público).
+      </p>
+      <p class="complaint-note">
+        Este formulario se encuentra en implementación: los datos que ingreses aún no se envían
+        automáticamente a un canal de atención. Mientras completamos esa conexión, por favor
+        escríbenos también por WhatsApp para darle seguimiento inmediato a tu reclamo o queja.
+      </p>
+
+      <form class="complaint-form" id="complaintForm">
+        <fieldset>
+          <legend>1. Identificación del consumidor reclamante</legend>
+        </fieldset>
+        <div>
+          <label for="nombre">Nombre completo</label>
+          <input type="text" id="nombre" name="nombre" required>
+        </div>
+        <div>
+          <label for="documento">DNI / Documento de identidad</label>
+          <input type="text" id="documento" name="documento" required>
+        </div>
+        <div>
+          <label for="telefono">Teléfono</label>
+          <input type="tel" id="telefono" name="telefono" required>
+        </div>
+        <div>
+          <label for="email">Correo electrónico</label>
+          <input type="email" id="email" name="email" required>
+        </div>
+        <div class="field-full">
+          <label for="domicilio">Domicilio</label>
+          <input type="text" id="domicilio" name="domicilio" required>
+        </div>
+
+        <fieldset>
+          <legend>2. Identificación del bien o servicio contratado</legend>
+        </fieldset>
+        <div>
+          <label for="servicio">Producto o servicio</label>
+          <input type="text" id="servicio" name="servicio" placeholder="Ej: Pedido Carnes Selectas">
+        </div>
+        <div>
+          <label for="monto">Monto reclamado (S/.)</label>
+          <input type="number" min="0" step="0.01" id="monto" name="monto">
+        </div>
+
+        <fieldset>
+          <legend>3. Tipo</legend>
+          <div class="radio-row">
+            <label><input type="radio" name="tipo" value="reclamo" checked> Reclamo</label>
+            <label><input type="radio" name="tipo" value="queja"> Queja</label>
+          </div>
+        </fieldset>
+
+        <div class="field-full">
+          <label for="detalle">Detalle</label>
+          <textarea id="detalle" name="detalle" required placeholder="Describe tu reclamo o queja con el mayor detalle posible."></textarea>
+        </div>
+
+        <div class="field-full">
+          <button type="submit" class="btn btn-primary">[ Enviar Reclamación ]</button>
+        </div>
+      </form>
+
+      <div class="complaint-success" id="complaintSuccess">
+        <p><strong>Gracias por tu reclamación.</strong></p>
+        <p>Hemos registrado tu solicitud. En cuanto conectemos este formulario a nuestro canal de
+        atención te contactaremos con la respuesta dentro del plazo legal (máximo 30 días
+        calendario). Si tu caso es urgente, escríbenos directamente por WhatsApp.</p>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- ============ FOOTER ============ -->
+<footer id="contacto" class="site-footer">
+  <div class="container footer-grid">
+    <div class="footer-col">
+      <div class="footer-brand">
+        <img class="footer-logo" src="assets/maches-icon.png" alt="" loading="lazy">
+        <span class="footer-brand-name">MACHES</span>
+      </div>
+      <p>Grupo cárnico peruano especializado en abastecimiento B2B, con trazabilidad, seguridad, facturación y cadena de frío continua.</p>
+    </div>
+
+    <div class="footer-col">
+      <h4>Navegación</h4>
+      <nav class="footer-vertical-nav" aria-label="Navegación del footer">
+        <a href="index.html#top">Inicio</a>
+        <a href="index.html#origen">Nuestro Origen</a>
+        <a href="index.html#lineas-negocio">Líneas de Negocio</a>
+        <a href="index.html#sostenibilidad">Sostenibilidad</a>
+        <a href="index.html#contacto">Contacto</a>
+      </nav>
+    </div>
+
+    <div class="footer-col">
+      <h4>
+        <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M12 2C7.6 2 4 5.6 4 10c0 6 8 12 8 12s8-6 8-12c0-4.4-3.6-8-8-8Zm0 11a3 3 0 1 1 0-6 3 3 0 0 1 0 6Z"/></svg>
+        Operaciones
+      </h4>
+      <ul class="footer-address-list">
+        <li>Lima — Av. Nicolás Ayllón 1215, San Luis (Centro de distribución y ventas).</li>
+        <li>Ica — San José de Los Molinos (Centro de distribución y acopio ganadero).</li>
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h4>
+        <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2.05 22l5.29-1.39a9.9 9.9 0 0 0 4.7 1.2h.01c5.46 0 9.9-4.45 9.9-9.9C21.96 6.45 17.5 2 12.04 2Zm5.8 14.16c-.24.68-1.4 1.3-1.93 1.38-.5.08-1.12.11-1.8-.11-.42-.13-.95-.3-1.64-.6-2.88-1.24-4.76-4.13-4.9-4.32-.14-.19-1.17-1.56-1.17-2.98 0-1.42.75-2.11 1.01-2.4.27-.28.58-.35.78-.35.2 0 .39 0 .56.01.18.01.42-.07.66.5.24.6.83 2.06.9 2.21.07.15.12.33.02.53-.1.19-.15.31-.29.48-.15.17-.31.38-.44.51-.15.15-.3.31-.13.6.17.29.75 1.24 1.62 2.01 1.11.99 2.05 1.3 2.34 1.45.29.15.46.13.63-.07.17-.2.72-.84.92-1.13.19-.29.39-.24.65-.14.27.1 1.7.8 1.99.95.29.15.49.22.56.34.08.13.08.72-.16 1.4Z"/></svg>
+        Contacto
+      </h4>
+      <a class="footer-phone" data-whatsapp-cta="footer" href="#" target="_blank" rel="noopener">+51 930 968 933</a>
+    </div>
+  </div>
+
+  <div class="container footer-legal">
+    <a href="libro-de-reclamaciones.html">Libro de Reclamaciones</a>
+    <a href="politica-privacidad.html">Política de Privacidad</a>
+    <a href="terminos-condiciones.html">Términos y Condiciones</a>
+  </div>
+
+  <div class="container footer-bottom">
+    <p>MACHES © 2026. Todos los derechos reservados.</p>
+    <div class="social-icons">
+      <a href="https://www.facebook.com/profile.php?id=61572995403338&amp;locale=es_LA" target="_blank" rel="noopener" aria-label="Facebook de MACHES">
+        <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M13.5 21v-8h2.7l.4-3.1h-3.1V8c0-.9.25-1.5 1.55-1.5H17V3.7C16.7 3.65 15.75 3.5 14.6 3.5c-2.3 0-3.9 1.4-3.9 4v2.4H8v3.1h2.7V21h2.8Z"/></svg>
+      </a>
+      <a href="https://www.instagram.com/angus.sostenible/" target="_blank" rel="noopener" aria-label="Instagram de MACHES">
+        <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M12 2.2c2.7 0 3 0 4 .05 1 .05 1.7.2 2.3.45.6.25 1.1.6 1.6 1.1.5.5.85 1 1.1 1.6.25.6.4 1.3.45 2.3.05 1 .05 1.3.05 4s0 3-.05 4c-.05 1-.2 1.7-.45 2.3-.25.6-.6 1.1-1.1 1.6-.5.5-1 .85-1.6 1.1-.6.25-1.3.4-2.3.45-1 .05-1.3.05-4 .05s-3 0-4-.05c-1-.05-1.7-.2-2.3-.45-.6-.25-1.1-.6-1.6-1.1-.5-.5-.85-1-1.1-1.6-.25-.6-.4-1.3-.45-2.3-.05-1-.05-1.3-.05-4s0-3 .05-4c.05-1 .2-1.7.45-2.3.25-.6.6-1.1 1.1-1.6.5-.5 1-.85 1.6-1.1.6-.25 1.3-.4 2.3-.45 1-.05 1.3-.05 4-.05Zm0 2.6a5.2 5.2 0 1 0 0 10.4 5.2 5.2 0 0 0 0-10.4Zm0 8.6a3.4 3.4 0 1 1 0-6.8 3.4 3.4 0 0 1 0 6.8Zm5.4-8.8a1.2 1.2 0 1 1-2.4 0 1.2 1.2 0 0 1 2.4 0Z"/></svg>
+      </a>
+      <a href="https://www.linkedin.com/company/grupo-maches/about/?viewAsMember=true" target="_blank" rel="noopener" aria-label="LinkedIn de MACHES">
+        <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M6.94 5a2 2 0 1 1-4 0 2 2 0 0 1 4 0ZM3.2 8.75h3.5V21H3.2V8.75Zm6.2 0h3.36v1.68h.05c.47-.88 1.6-1.8 3.3-1.8 3.53 0 4.18 2.32 4.18 5.35V21h-3.5v-6.4c0-1.53-.03-3.5-2.13-3.5-2.14 0-2.47 1.67-2.47 3.39V21H9.4V8.75Z"/></svg>
+      </a>
+    </div>
+  </div>
+</footer>
+
+<script src="js/main.js"></script>
+</body>
+</html>

@@ -2,18 +2,19 @@
   "use strict";
 
   /* ============================================================
-     CONFIG — reemplazar antes de publicar
+     CONFIG
      ============================================================ */
-  // TODO: reemplazar con el número real de WhatsApp Business de M&M Agropecuario
-  // Formato: código de país + número, sin "+", sin espacios (ej: "51987654321")
-  var WHATSAPP_NUMBER = "51900000000";
+  // Número real de WhatsApp Business de MACHES
+  // Formato: código de país + número, sin "+", sin espacios
+  var WHATSAPP_NUMBER = "51930968933";
 
   var WHATSAPP_MESSAGES = {
-    header: "Hola M&M Agropecuario, quisiera más información.",
-    catalogo: "Hola M&M Agropecuario, quisiera solicitar su catálogo de productos.",
-    anguss: "Hola, quisiera cotizar un pedido de carnes con Anguss - M&M Agropecuario.",
-    herencia: "Hola, quisiera solicitar la ficha técnica de Herencia Orgánica - M&M Agropecuario.",
-    footer: "Hola M&M Agropecuario, quisiera más información."
+    header: "Hola MACHES, quisiera más información.",
+    pedido: "Hola MACHES, quisiera hacer un pedido.",
+    carnes: "Hola, quisiera cotizar un pedido de Carnes Selectas - MACHES.",
+    herencia: "Hola, quisiera cotizar Herencia Orgánica - MACHES.",
+    chancho: "Hola MACHES, quisiera reservar un lote de chancho por mayor.",
+    footer: "Hola MACHES, quisiera más información."
   };
 
   function buildWhatsAppLink(message) {
@@ -57,9 +58,22 @@
   var slides = Array.prototype.slice.call(document.querySelectorAll(".hero-slide"));
   var dots = Array.prototype.slice.call(document.querySelectorAll(".hero-dot"));
   var heroSection = document.querySelector(".hero");
+  var heroCta = document.getElementById("heroCta");
   var current = 0;
   var AUTOPLAY_MS = 6000;
   var timer = null;
+
+  function applyHeroCta(slide) {
+    if (!heroCta) return;
+    var label = slide.getAttribute("data-cta-label") || "[ Haz tu Pedido ]";
+    var key = slide.getAttribute("data-cta-key") || "pedido";
+    var style = slide.getAttribute("data-cta-style") || "fucsia";
+    heroCta.textContent = label;
+    heroCta.setAttribute("data-whatsapp-cta", key);
+    heroCta.setAttribute("href", buildWhatsAppLink(WHATSAPP_MESSAGES[key] || WHATSAPP_MESSAGES.pedido));
+    heroCta.classList.toggle("btn-fucsia", style === "fucsia");
+    heroCta.classList.toggle("btn-primary", style !== "fucsia");
+  }
 
   function goTo(index) {
     slides[current].classList.remove("is-active");
@@ -71,10 +85,13 @@
     slides[current].classList.add("is-active");
     dots[current].classList.add("is-active");
     dots[current].setAttribute("aria-selected", "true");
+    applyHeroCta(slides[current]);
   }
 
   function next() { goTo(current + 1); }
   function prev() { goTo(current - 1); }
+
+  if (slides.length) applyHeroCta(slides[0]);
 
   function startAutoplay() {
     stopAutoplay();
@@ -131,5 +148,49 @@
     revealEls.forEach(function (el) { observer.observe(el); });
   } else {
     revealEls.forEach(function (el) { el.classList.add("is-visible"); });
+  }
+
+  /* ============================================================
+     Banner de cookies
+     ============================================================ */
+  var COOKIE_CONSENT_KEY = "mm_cookie_consent";
+  try {
+    if (localStorage.getItem(COOKIE_CONSENT_KEY) !== "accepted") {
+      var banner = document.createElement("div");
+      banner.className = "cookie-banner";
+      banner.setAttribute("role", "region");
+      banner.setAttribute("aria-label", "Aviso de cookies");
+      banner.innerHTML =
+        '<p>Usamos cookies propias para mejorar tu experiencia de navegación. ' +
+        'Al continuar navegando aceptas nuestra ' +
+        '<a href="politica-privacidad.html">Política de Privacidad</a>.</p>' +
+        '<div class="cookie-banner-actions">' +
+        '<button type="button" class="btn btn-fucsia" id="cookieAccept">Aceptar</button>' +
+        "</div>";
+      document.body.appendChild(banner);
+      requestAnimationFrame(function () { banner.classList.add("is-visible"); });
+      document.getElementById("cookieAccept").addEventListener("click", function () {
+        try { localStorage.setItem(COOKIE_CONSENT_KEY, "accepted"); } catch (err) {}
+        banner.classList.remove("is-visible");
+        window.setTimeout(function () { banner.remove(); }, 400);
+      });
+    }
+  } catch (err) {
+    /* localStorage no disponible (modo privado, etc.) — no mostrar el banner */
+  }
+
+  /* ============================================================
+     Libro de Reclamaciones: envío del formulario
+     ============================================================ */
+  var complaintForm = document.getElementById("complaintForm");
+  if (complaintForm) {
+    complaintForm.addEventListener("submit", function (e) {
+      e.preventDefault();
+      // TODO: conectar a un backend/servicio de email real (por ahora solo
+      // confirma en pantalla; los datos no se envían a ningún lado todavía).
+      complaintForm.hidden = true;
+      var success = document.getElementById("complaintSuccess");
+      if (success) success.classList.add("is-visible");
+    });
   }
 })();
