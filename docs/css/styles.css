@@ -254,6 +254,8 @@ button { font-family: inherit; cursor: pointer; }
   background-image: url('../assets/hero-carnes-selectas-bandejas.jpg');
   background-position: center 45%;
 }
+.slide-anguss .hero-title { font-size: clamp(1.8rem, 3.6vw, 3rem); }
+.slide-anguss .hero-title strong { white-space: nowrap; }
 .slide-organic {
   background-color: var(--color-black);
   background-image: url('../assets/maches-herencia-campo.jpg');
