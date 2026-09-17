@@ -15,8 +15,8 @@
   --color-muted: rgba(244, 236, 230, 0.72);
   --color-line: rgba(244, 236, 230, 0.14);
 
-  --font-display: "Oswald", "Arial Narrow", sans-serif;
-  --font-body: "Work Sans", "Segoe UI", sans-serif;
+  --font-display: "Montserrat", "Arial Narrow", sans-serif;
+  --font-body: "Montserrat", "Segoe UI", sans-serif;
 
   --space-1: 0.4rem;
   --space-2: 0.8rem;
@@ -398,7 +398,7 @@ button { font-family: inherit; cursor: pointer; }
 .origin-stat-caption strong {
   display: block;
   font-family: var(--font-display);
-  font-size: 1.6rem;
+  font-size: 1.15rem;
   color: #fff;
   line-height: 1.2;
 }
@@ -486,6 +486,7 @@ button { font-family: inherit; cursor: pointer; }
    Tipos de Carnes
    ========================================================================== */
 .meat-types-section { padding-top: var(--space-3); padding-bottom: var(--space-3); }
+.meat-types-section.container { max-width: 1360px; }
 .meat-types-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
