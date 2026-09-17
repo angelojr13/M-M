@@ -5,6 +5,7 @@ grupomaches.com, www.grupomaches.com {
     try_files {path} {path}/ =404
 }
 
-bot.grupomaches.com {
-    reverse_proxy n8n:5678
-}
+# bot.grupomaches.com: se activa cuando se despliegue n8n (ver docker-compose.yml).
+# bot.grupomaches.com {
+#     reverse_proxy n8n:5678
+# }
