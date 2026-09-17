@@ -245,10 +245,10 @@ button { font-family: inherit; cursor: pointer; }
 .slide-heritage {
   background-color: var(--color-black);
   background-image: url('../assets/fundadores-maribel-moche.jpg');
-  background-repeat: no-repeat;
-  background-size: contain;
-  background-position: bottom right;
+  background-position: center 12%;
+  align-items: flex-end;
 }
+.slide-heritage .hero-content { padding-bottom: 26vh; }
 .slide-anguss {
   background-color: var(--color-black);
   background-image: url('../assets/hero-carnes-selectas.jpg');
