@@ -193,4 +193,19 @@
       if (success) success.classList.add("is-visible");
     });
   }
+
+  /* ============================================================
+     Boletín: envío del formulario
+     ============================================================ */
+  var newsletterForm = document.getElementById("newsletterForm");
+  if (newsletterForm) {
+    newsletterForm.addEventListener("submit", function (e) {
+      e.preventDefault();
+      // TODO: conectar a un servicio real de email marketing (por ahora solo
+      // confirma en pantalla; los datos no se envían a ningún lado todavía).
+      var success = document.getElementById("newsletterSuccess");
+      newsletterForm.reset();
+      if (success) success.classList.add("is-visible");
+    });
+  }
 })();

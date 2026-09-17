@@ -4,10 +4,10 @@
 :root {
   --color-black: #0a0808;
   --color-black-soft: #140f0f;
-  --color-guinda: #6b0f1a;
-  --color-guinda-hover: #86141f;
-  --color-fucsia: #a20055;
-  --color-fucsia-hover: #c00565;
+  --color-guinda: #911831;
+  --color-guinda-hover: #a91d3a;
+  --color-fucsia: #c20e44;
+  --color-fucsia-hover: #db1a54;
   --color-red-accent: var(--color-fucsia);
   --color-red-accent-hover: var(--color-fucsia-hover);
   --color-white: #ffffff;
@@ -245,7 +245,9 @@ button { font-family: inherit; cursor: pointer; }
 .slide-heritage {
   background-color: var(--color-black);
   background-image: url('../assets/fundadores-maribel-moche.jpg');
-  background-position: center 25%;
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: bottom right;
 }
 .slide-anguss {
   background-color: var(--color-black);
@@ -525,13 +527,13 @@ button { font-family: inherit; cursor: pointer; }
 }
 .meat-type-icon {
   flex-shrink: 0;
-  width: 40px;
-  height: 40px;
+  width: 52px;
+  height: 52px;
   display: flex;
   align-items: center;
   justify-content: center;
 }
-.meat-type-icon svg { width: 40px; height: 40px; fill: var(--color-guinda); transition: fill 0.25s var(--ease); }
+.meat-type-icon svg { width: 52px; height: 52px; fill: var(--color-guinda); transition: fill 0.25s var(--ease); }
 .meat-type-card:hover .meat-type-icon svg { fill: var(--color-fucsia); }
 .meat-type-name {
   flex: 1;
@@ -614,6 +616,67 @@ button { font-family: inherit; cursor: pointer; }
   margin-bottom: var(--space-2);
 }
 .impact-text { color: var(--color-muted); font-size: 0.92rem; }
+
+/* ==========================================================================
+   Boletín
+   ========================================================================== */
+.newsletter-bar {
+  background: var(--color-black-soft);
+  border-top: 1px solid var(--color-line);
+  padding-block: var(--space-5);
+}
+.newsletter-inner {
+  display: grid;
+  grid-template-columns: 0.9fr 1.4fr;
+  gap: var(--space-5);
+  align-items: center;
+}
+.newsletter-kicker {
+  font-family: var(--font-display);
+  color: var(--color-fucsia);
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  font-size: 0.8rem;
+  margin-bottom: var(--space-1);
+}
+.newsletter-title { font-size: 1.5rem; color: #fff; margin-bottom: var(--space-1); }
+.newsletter-text { color: var(--color-muted); font-size: 0.92rem; }
+.newsletter-form {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: var(--space-2) var(--space-3);
+}
+.newsletter-form input[type="email"] {
+  grid-column: 1 / -1;
+  padding: 0.85rem 1rem;
+  background: var(--color-black);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-sm);
+  color: var(--color-cream);
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+}
+.newsletter-form input[type="email"]:focus { outline: none; border-color: var(--color-fucsia); }
+.newsletter-check {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.6em;
+  font-size: 0.8rem;
+  color: var(--color-muted);
+  text-align: left;
+}
+.newsletter-check input { margin-top: 0.2em; flex-shrink: 0; }
+.newsletter-check a { color: var(--color-cream); text-decoration: underline; }
+.newsletter-submit { justify-self: start; margin-top: var(--space-1); }
+.newsletter-success {
+  grid-column: 1 / -1;
+  display: none;
+  color: var(--color-cream);
+  font-size: 0.9rem;
+  margin-top: var(--space-1);
+}
+.newsletter-success.is-visible { display: block; }
 
 /* ==========================================================================
    Footer
@@ -765,6 +828,7 @@ button { font-family: inherit; cursor: pointer; }
   .unit-visual { max-width: 420px; }
 
   .impact-grid { grid-template-columns: 1fr; }
+  .newsletter-inner { grid-template-columns: 1fr; }
   .meat-types-grid { grid-template-columns: repeat(2, 1fr); }
 
   .footer-grid { grid-template-columns: 1fr; }
