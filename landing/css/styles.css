@@ -251,8 +251,8 @@ button { font-family: inherit; cursor: pointer; }
 .slide-heritage .hero-content { padding-bottom: 26vh; }
 .slide-anguss {
   background-color: var(--color-black);
-  background-image: url('../assets/hero-carnes-selectas.jpg');
-  background-position: center 35%;
+  background-image: url('../assets/hero-carnes-selectas-bandejas.jpg');
+  background-position: center 45%;
 }
 .slide-organic {
   background-color: var(--color-black);
@@ -392,7 +392,7 @@ button { font-family: inherit; cursor: pointer; }
   padding: var(--space-3) var(--space-4);
   font-size: 0.85rem;
   letter-spacing: 0.02em;
-  text-transform: uppercase;
+  text-transform: none;
   color: var(--color-muted);
 }
 .origin-stat-caption strong {
@@ -472,6 +472,7 @@ button { font-family: inherit; cursor: pointer; }
   gap: 0.5em;
   font-family: var(--font-display);
   font-size: 1rem;
+  font-weight: 700;
   letter-spacing: 0.04em;
   text-transform: uppercase;
   color: var(--color-muted);

@@ -1,0 +1,10 @@
+grupomaches.com, www.grupomaches.com {
+    root * /srv/site
+    file_server
+    encode gzip
+    try_files {path} {path}/ =404
+}
+
+bot.grupomaches.com {
+    reverse_proxy n8n:5678
+}
