@@ -520,20 +520,19 @@ button { font-family: inherit; cursor: pointer; }
 /* ==========================================================================
    Units (Anguss / Herencia Orgánica)
    ========================================================================== */
-.units-section { padding-top: var(--space-5); padding-bottom: var(--space-3); }
-.units-section > .container { margin-bottom: var(--space-3); }
+.units-section { padding-block: var(--space-5); }
 
 .unit-block { padding-block: var(--space-6); }
-#carnes-selectas.unit-block { padding-top: var(--space-3); padding-bottom: var(--space-3); }
+#carnes-selectas.unit-block { padding-top: var(--space-3); padding-bottom: var(--space-5); }
 .unit-block-alt { background: var(--color-black-soft); border-block: 1px solid var(--color-line); }
-.sustainability-block { padding-top: var(--space-3); }
+.sustainability-block { padding-block: var(--space-3); }
 .sustainability-block .unit-block:first-child { padding-top: var(--space-3); }
 
 .unit-grid {
   display: grid;
   grid-template-columns: 0.85fr 1.15fr;
   gap: var(--space-6);
-  align-items: center;
+  align-items: start;
 }
 .unit-block-alt .unit-grid { grid-template-columns: 1.15fr 0.85fr; }
 .unit-block-alt .unit-copy { order: 1; }
@@ -598,8 +597,8 @@ button { font-family: inherit; cursor: pointer; }
 }
 .indicators-list li {
   display: flex;
-  align-items: baseline;
-  gap: 0.5em;
+  align-items: center;
+  gap: 0.6em;
   font-family: var(--font-display);
   font-size: 1rem;
   font-weight: 700;
@@ -608,6 +607,8 @@ button { font-family: inherit; cursor: pointer; }
   color: var(--color-muted);
   white-space: nowrap;
 }
+.indicator-icon { display: inline-flex; color: var(--color-fucsia); flex-shrink: 0; }
+.indicator-icon svg { width: 22px; height: 22px; fill: currentColor; display: block; }
 .indicators-list li strong {
   color: var(--color-fucsia);
   font-weight: 700;
@@ -619,8 +620,7 @@ button { font-family: inherit; cursor: pointer; }
 .catalog-section {
   background: var(--color-cream);
   color: var(--color-black);
-  padding-top: var(--space-5);
-  padding-bottom: var(--space-6);
+  padding-block: var(--space-5);
 }
 .catalog-section .section-kicker { color: var(--color-guinda); }
 .catalog-title { color: var(--color-black); }
@@ -852,7 +852,7 @@ button { font-family: inherit; cursor: pointer; }
 /* ==========================================================================
    Triple Impacto y Sostenibilidad
    ========================================================================== */
-.impact-inner { padding-top: var(--space-3); padding-bottom: var(--space-6); }
+.impact-inner { padding-block: var(--space-3); }
 .impact-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
