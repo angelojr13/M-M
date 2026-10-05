@@ -768,6 +768,8 @@ button { font-family: inherit; cursor: pointer; }
 .promo-card .promo-name { margin-top: var(--space-2); }
 .promo-name { font-family: var(--font-display); font-size: 1.1rem; font-weight: 700; line-height: 1.2; }
 .promo-main .promo-name { font-size: 1.7rem; }
+.promo-main.promo-empty { min-height: 160px; justify-content: center; background: linear-gradient(120deg, var(--color-black-soft), rgba(194, 14, 68, 0.18)); }
+.promo-main.promo-empty .promo-badge { position: static; margin-bottom: var(--space-1); }
 .promo-prices { display: flex; align-items: baseline; flex-wrap: wrap; gap: 0.25rem 0.55rem; }
 .promo-old { color: var(--color-muted); font-size: 0.9rem; }
 .promo-new { color: #fff; background: var(--color-fucsia); padding: 0.05em 0.45em; border-radius: 4px; font-size: 1.05rem; }

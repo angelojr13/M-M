@@ -23,12 +23,10 @@
   // Ofertas que se muestran bajo los círculos del catálogo (rotan cada 3 segundos).
   // Precios tomados de la propuesta de catálogo (Catalogo_Propuesta_MACHES.xlsx).
   // Para cambiarlas solo edita esta lista. "antesLabel" y "nota" son opcionales.
-  var PROMOCIONES = [
-    { nombre: "Pack Parrillero Familiar", antesLabel: "Por separado", antes: "S/ 170.50", ahora: "S/ 152.90", nota: "Ahorras S/ 17.60", imagen: "assets/hero-carnes-selectas-bandejas.jpg" },
-    { nombre: "Chuleta de lomo", antes: "S/ 22.00", ahora: "S/ 20.90", unidad: "x kg", imagen: "assets/hero-oferta-chancho.jpg" },
-    { nombre: "Pack Caja China / Cilindro", antesLabel: "Por separado", antes: "S/ 121.60", ahora: "S/ 111.90", nota: "Adobo y sazonador de cortesía", imagen: "assets/maches-carnes-selectas.jpg" },
-    { nombre: "Pack Chicharronero", antesLabel: "Por separado", antes: "S/ 93.15", ahora: "S/ 85.90", nota: "Ahorras S/ 7.25", imagen: "assets/hero-carnes-selectas.jpg" }
-  ];
+  // Ejemplo de una oferta:
+  // { nombre: "Chuleta de lomo", antes: "S/ 22.00", ahora: "S/ 20.90", unidad: "x kg", imagen: "assets/hero-oferta-chancho.jpg" },
+  // Mientras la lista esté vacía se muestra un recuadro de "Ofertas – Muy pronto".
+  var PROMOCIONES = [];
   var PROMO_INTERVAL_MS = 3000;
 
   function buildWhatsAppLink(message) {
@@ -165,6 +163,14 @@
      Franja de ofertas (bajo los círculos del catálogo)
      ============================================================ */
   var promoStrip = document.getElementById("promoStrip");
+  if (promoStrip && !PROMOCIONES.length) {
+    promoStrip.classList.add("has-0-side");
+    promoStrip.innerHTML =
+      '<a class="promo-main promo-empty" target="_blank" rel="noopener" href="' + buildWhatsAppLink(WHATSAPP_MESSAGES.promos) + '">' +
+      '<span class="promo-badge">Ofertas</span>' +
+      '<span class="promo-name">Muy pronto nuevas promociones</span>' +
+      '<span class="promo-cta">Consúltanos por WhatsApp →</span></a>';
+  }
   if (promoStrip && PROMOCIONES.length) {
     var promoEl = function (tag, cls, text) {
       var el = document.createElement(tag);
