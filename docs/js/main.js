@@ -17,8 +17,17 @@
     chancho: "Hola MACHES, deseo información y cotización general de \"lote de chancho por mayor\".",
     footer: "Hola MACHES, quisiera más información.",
     flotante: "Hola MACHES, quisiera más información.",
-    promos: "Hola MACHES, quisiera saber sobre las promociones vigentes."
+    promos: "Hola MACHES, quiero ver las promociones vigentes."
   };
+
+  // Ofertas que se muestran bajo los círculos del catálogo (rotan cada 3 segundos).
+  // Para cambiarlas solo edita esta lista: nombre, precio antes, precio ahora, unidad e imagen.
+  var PROMOCIONES = [
+    { nombre: "Chuleta de Lomo de Cerdo", antes: "S/ 25.00", ahora: "S/ 22.00", unidad: "x kg", imagen: "assets/hero-oferta-chancho.jpg" },
+    { nombre: "Pack Chicharronero", antes: "S/ 75.00", ahora: "S/ 65.00", unidad: "el pack", imagen: "assets/hero-carnes-selectas-bandejas.jpg" },
+    { nombre: "Hamburguesas Artesanales", antes: "S/ 28.00", ahora: "S/ 25.00", unidad: "paquete x 4", imagen: "assets/maches-productos-granja.jpg" }
+  ];
+  var PROMO_INTERVAL_MS = 3000;
 
   function buildWhatsAppLink(message) {
     return "https://wa.me/" + WHATSAPP_NUMBER + "?text=" + encodeURIComponent(message);
@@ -149,6 +158,91 @@
       openCategory(link.getAttribute("href").slice(1));
     });
   });
+
+  /* ============================================================
+     Franja de ofertas (bajo los círculos del catálogo)
+     ============================================================ */
+  var promoStrip = document.getElementById("promoStrip");
+  if (promoStrip && PROMOCIONES.length) {
+    var promoEl = function (tag, cls, text) {
+      var el = document.createElement(tag);
+      if (cls) el.className = cls;
+      if (text) el.textContent = text;
+      return el;
+    };
+    var promoPrices = function (p) {
+      var wrap = promoEl("span", "promo-prices");
+      if (p.antes) wrap.appendChild(promoEl("s", "promo-old", p.antes));
+      wrap.appendChild(promoEl("strong", "promo-new", p.ahora));
+      if (p.unidad) wrap.appendChild(promoEl("span", "promo-unit", p.unidad));
+      return wrap;
+    };
+
+    // Rectángulo grande: imágenes que se van alternando
+    var promoMain = promoEl("a", "promo-main");
+    promoMain.href = buildWhatsAppLink(WHATSAPP_MESSAGES.promos);
+    promoMain.target = "_blank";
+    promoMain.rel = "noopener";
+    var promoSlides = PROMOCIONES.map(function (p, i) {
+      var slide = promoEl("span", "promo-slide" + (i === 0 ? " is-active" : ""));
+      slide.style.backgroundImage = "url('" + p.imagen + "')";
+      var copy = promoEl("span", "promo-slide-copy");
+      copy.appendChild(promoEl("span", "promo-name", p.nombre));
+      copy.appendChild(promoPrices(p));
+      slide.appendChild(copy);
+      promoMain.appendChild(slide);
+      return slide;
+    });
+    promoMain.appendChild(promoEl("span", "promo-badge", "Ofertas"));
+    promoMain.appendChild(promoEl("span", "promo-cta", "Quiero ver las promociones →"));
+    var promoDots = promoEl("span", "promo-dots");
+    PROMOCIONES.forEach(function () { promoDots.appendChild(promoEl("span", "promo-dot")); });
+    promoMain.appendChild(promoDots);
+    promoStrip.appendChild(promoMain);
+
+    // Cuadritos a la derecha: las siguientes ofertas de la lista
+    var promoSide = [];
+    for (var k = 1; k <= Math.min(2, PROMOCIONES.length - 1); k++) {
+      var card = promoEl("a", "promo-card");
+      card.target = "_blank";
+      card.rel = "noopener";
+      promoStrip.appendChild(card);
+      promoSide.push(card);
+    }
+    promoStrip.classList.add("has-" + promoSide.length + "-side");
+
+    var promoIndex = 0;
+    var renderPromos = function () {
+      promoSlides.forEach(function (s, i) { s.classList.toggle("is-active", i === promoIndex); });
+      Array.prototype.forEach.call(promoDots.children, function (d, i) { d.classList.toggle("is-active", i === promoIndex); });
+      promoSide.forEach(function (card, k) {
+        var p = PROMOCIONES[(promoIndex + k + 1) % PROMOCIONES.length];
+        card.href = buildWhatsAppLink("Hola MACHES, me interesa la oferta de " + p.nombre + " a " + p.ahora + (p.unidad ? " " + p.unidad : "") + ". ¿Sigue disponible?");
+        card.style.backgroundImage = "url('" + p.imagen + "')";
+        card.innerHTML = "";
+        card.appendChild(promoEl("span", "promo-badge promo-badge-sm", "Oferta"));
+        card.appendChild(promoEl("span", "promo-name", p.nombre));
+        card.appendChild(promoPrices(p));
+        card.classList.remove("is-swapping");
+        void card.offsetWidth; // reinicia la animación de entrada
+        card.classList.add("is-swapping");
+      });
+    };
+    renderPromos();
+
+    var promoTimer = null;
+    var startPromos = function () {
+      if (PROMOCIONES.length < 2 || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+      window.clearInterval(promoTimer);
+      promoTimer = window.setInterval(function () {
+        promoIndex = (promoIndex + 1) % PROMOCIONES.length;
+        renderPromos();
+      }, PROMO_INTERVAL_MS);
+    };
+    promoStrip.addEventListener("mouseenter", function () { window.clearInterval(promoTimer); });
+    promoStrip.addEventListener("mouseleave", startPromos);
+    startPromos();
+  }
 
   /* ============================================================
      Buscador de productos

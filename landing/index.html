@@ -493,10 +493,6 @@
         <span class="catalog-category-circle"><svg viewBox="0 0 100 100"><path d="M32 18 L46 18 L46 24 L50 30 Q58 36 58 46 L58 72 Q58 80 50 80 L30 80 Q22 80 22 72 L22 30 Q22 20 32 18 Z"/><path d="M44 18 L52 18 L48 26 Z" fill="#911831"/><circle cx="64" cy="48" r="10" fill="none" stroke="#f4ece6" stroke-width="5.5"/><ellipse cx="78" cy="78" rx="9" ry="11" transform="rotate(10 78 78)"/><ellipse cx="66" cy="83" rx="9" ry="11" transform="rotate(-8 66 83)"/></svg></span>
         <span class="catalog-category-label">Derivados</span>
       </button>
-      <a class="catalog-category-btn catalog-promo-circle" data-whatsapp-cta="promos" href="#" target="_blank" rel="noopener">
-        <span class="catalog-category-circle"><svg viewBox="0 0 24 24"><path d="M21.41 11.58l-9-9C12.05 2.22 11.55 2 11 2H4c-1.1 0-2 .9-2 2v7c0 .55.22 1.05.59 1.41l9 9c.36.36.86.59 1.41.59.55 0 1.05-.22 1.41-.59l7-7c.37-.36.59-.86.59-1.41 0-.55-.23-1.06-.59-1.42zM5.5 7C4.67 7 4 6.33 4 5.5S4.67 4 5.5 4 7 4.67 7 5.5 6.33 7 5.5 7z"/></svg></span>
-        <span class="catalog-category-label">Promociones</span>
-      </a>
     </div>
 
     <div class="container catalog-categories">
@@ -910,6 +906,9 @@
       </div>
     </div>
     </div>
+
+    <!-- Franja de ofertas: se arma desde PROMOCIONES en js/main.js y rota cada 3 segundos -->
+    <div class="catalog-promos container" id="promoStrip" aria-label="Ofertas"></div>
   </section>
 
   <!-- ============ NUESTRO ORIGEN ============ -->
