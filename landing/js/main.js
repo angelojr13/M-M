@@ -58,6 +58,8 @@
   var menuToggle = document.getElementById("menuToggle");
   var mainNav = document.getElementById("mainNav");
   var setMenuOpen = function (isOpen) {
+    // El menú móvil se abre justo debajo del header, mida lo que mida
+    if (isOpen) mainNav.style.top = Math.round(header.getBoundingClientRect().bottom) + "px";
     mainNav.classList.toggle("is-open", isOpen);
     menuToggle.setAttribute("aria-expanded", String(isOpen));
     menuToggle.setAttribute("aria-label", isOpen ? "Cerrar menú de navegación" : "Abrir menú de navegación");
