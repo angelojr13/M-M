@@ -10,11 +10,11 @@
 
   var WHATSAPP_MESSAGES = {
     header: "Hola MACHES, quisiera más información.",
-    pedido: "Hola MACHES, quisiera hacer un pedido.",
+    pedido: "Hola MACHES, deseo información y cotización general de \"nuestros productos\".",
     carnes: "Hola MACHES, deseo información y cotización general de \"carnes de selección\".",
     catering: "Hola MACHES, deseo información y cotización general de \"catering criollo\".",
     herencia: "Hola MACHES, deseo información y cotización general de \"abono orgánico\".",
-    chancho: "Hola MACHES, quisiera reservar un lote de chancho por mayor.",
+    chancho: "Hola MACHES, deseo información y cotización general de \"lote de chancho por mayor\".",
     footer: "Hola MACHES, quisiera más información.",
     flotante: "Hola MACHES, quisiera más información.",
     promos: "Hola MACHES, quisiera saber sobre las promociones vigentes."
