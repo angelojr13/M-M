@@ -12,9 +12,12 @@
     header: "Hola MACHES, quisiera más información.",
     pedido: "Hola MACHES, quisiera hacer un pedido.",
     carnes: "Hola, quisiera cotizar un pedido de Carnes Selectas - MACHES.",
+    catering: "Hola, quisiera cotizar el servicio de Catering Criollo - MACHES.",
     herencia: "Hola, quisiera cotizar Herencia Orgánica - MACHES.",
     chancho: "Hola MACHES, quisiera reservar un lote de chancho por mayor.",
-    footer: "Hola MACHES, quisiera más información."
+    footer: "Hola MACHES, quisiera más información.",
+    flotante: "Hola MACHES, quisiera más información.",
+    promos: "Hola MACHES, quisiera saber sobre las promociones vigentes."
   };
 
   function buildWhatsAppLink(message) {
@@ -25,6 +28,11 @@
     var key = el.getAttribute("data-whatsapp-cta");
     var message = WHATSAPP_MESSAGES[key] || WHATSAPP_MESSAGES.header;
     el.setAttribute("href", buildWhatsAppLink(message));
+  });
+
+  document.querySelectorAll("[data-whatsapp-product]").forEach(function (el) {
+    var product = el.getAttribute("data-whatsapp-product");
+    el.setAttribute("href", buildWhatsAppLink("Hola MACHES, quisiera cotizar: " + product + "."));
   });
 
   /* ============================================================
@@ -51,6 +59,105 @@
       menuToggle.setAttribute("aria-expanded", "false");
     });
   });
+
+  /* ============================================================
+     Menú desplegable "Productos"
+     ============================================================ */
+  var productsDropdown = document.getElementById("productsDropdown");
+  var productsToggle = document.getElementById("productsToggle");
+  if (productsDropdown && productsToggle) {
+    productsToggle.addEventListener("click", function (e) {
+      e.stopPropagation();
+      var isOpen = productsDropdown.classList.toggle("is-open");
+      productsToggle.setAttribute("aria-expanded", String(isOpen));
+    });
+    document.addEventListener("click", function (e) {
+      if (!productsDropdown.contains(e.target)) {
+        productsDropdown.classList.remove("is-open");
+        productsToggle.setAttribute("aria-expanded", "false");
+      }
+    });
+  }
+
+  /* ============================================================
+     Buscador de productos
+     ============================================================ */
+  var searchForm = document.getElementById("headerSearchForm");
+  var searchInput = document.getElementById("productSearch");
+  var searchResults = document.getElementById("searchResults");
+  var productCards = Array.prototype.slice.call(document.querySelectorAll(".product-card[data-name]"));
+
+  function clearHighlights() {
+    productCards.forEach(function (card) { card.classList.remove("is-highlighted"); });
+  }
+
+  function highlightProduct(card) {
+    clearHighlights();
+    card.classList.add("is-highlighted");
+    card.scrollIntoView({ behavior: "smooth", block: "center" });
+    window.setTimeout(function () { card.classList.remove("is-highlighted"); }, 1800);
+  }
+
+  function renderSearchResults(query) {
+    if (!searchResults) return;
+    searchResults.innerHTML = "";
+    if (!query) { searchResults.hidden = true; return; }
+    var matches = productCards.filter(function (card) {
+      return card.getAttribute("data-name").toLowerCase().indexOf(query) !== -1;
+    });
+    if (!matches.length) {
+      var p = document.createElement("p");
+      p.textContent = "Sin resultados para \"" + query + "\".";
+      searchResults.appendChild(p);
+    } else {
+      matches.slice(0, 8).forEach(function (card) {
+        var a = document.createElement("a");
+        a.href = "#" + (card.closest(".catalog-category") ? card.closest(".catalog-category").id : "");
+        a.textContent = card.getAttribute("data-name");
+        a.addEventListener("click", function (e) {
+          e.preventDefault();
+          highlightProduct(card);
+          searchResults.hidden = true;
+          searchInput.blur();
+        });
+        searchResults.appendChild(a);
+      });
+    }
+    searchResults.hidden = false;
+  }
+
+  if (searchForm && searchInput) {
+    if (productCards.length) {
+      // En index.html: filtra en vivo, sin recargar la página
+      searchForm.addEventListener("submit", function (e) { e.preventDefault(); });
+      searchInput.addEventListener("input", function () {
+        renderSearchResults(searchInput.value.trim().toLowerCase());
+      });
+      document.addEventListener("click", function (e) {
+        if (searchResults && !searchForm.contains(e.target)) searchResults.hidden = true;
+      });
+
+      // Si se llegó desde otra página con ?buscar=..., precarga el resultado
+      var params = new URLSearchParams(window.location.search);
+      var initialQuery = params.get("buscar");
+      if (initialQuery) {
+        searchInput.value = initialQuery;
+        renderSearchResults(initialQuery.trim().toLowerCase());
+      }
+    }
+    // En páginas sin catálogo (legales), el formulario navega normal a index.html?buscar=...
+  }
+
+  /* ============================================================
+     Flechas de la barra de categorías del catálogo
+     ============================================================ */
+  var catalogTabs = document.querySelector(".catalog-tabs");
+  var tabsPrev = document.querySelector(".catalog-tabs-prev");
+  var tabsNext = document.querySelector(".catalog-tabs-next");
+  if (catalogTabs && tabsPrev && tabsNext) {
+    tabsPrev.addEventListener("click", function () { catalogTabs.scrollBy({ left: -200, behavior: "smooth" }); });
+    tabsNext.addEventListener("click", function () { catalogTabs.scrollBy({ left: 200, behavior: "smooth" }); });
+  }
 
   /* ============================================================
      Hero slider
@@ -149,6 +256,20 @@
   } else {
     revealEls.forEach(function (el) { el.classList.add("is-visible"); });
   }
+
+  /* ============================================================
+     Mini-slideshows de imagenes (unit-visual)
+     ============================================================ */
+  document.querySelectorAll(".unit-slideshow").forEach(function (box) {
+    var slides = Array.prototype.slice.call(box.querySelectorAll(".unit-slide"));
+    if (slides.length < 2) return;
+    var i = 0;
+    window.setInterval(function () {
+      slides[i].classList.remove("is-active");
+      i = (i + 1) % slides.length;
+      slides[i].classList.add("is-active");
+    }, 3000);
+  });
 
   /* ============================================================
      Banner de cookies
