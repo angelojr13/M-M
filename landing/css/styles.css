@@ -697,6 +697,7 @@ button { font-family: inherit; cursor: pointer; }
   padding: var(--space-3);
   transition: box-shadow 0.2s var(--ease), transform 0.2s var(--ease), border-color 0.2s var(--ease);
 }
+.product-card p { text-align: left; }
 .product-card.is-highlighted,
 .product-card:hover {
   border-color: var(--color-guinda);
@@ -730,6 +731,7 @@ button { font-family: inherit; cursor: pointer; }
   font-weight: 700;
   color: var(--color-red-accent);
   margin-bottom: 0.15rem;
+  text-align: left;
 }
 .product-price-label {
   display: block;
