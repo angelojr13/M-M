@@ -48,16 +48,25 @@
 
   var menuToggle = document.getElementById("menuToggle");
   var mainNav = document.getElementById("mainNav");
-  menuToggle.addEventListener("click", function () {
-    var isOpen = mainNav.classList.toggle("is-open");
+  var setMenuOpen = function (isOpen) {
+    mainNav.classList.toggle("is-open", isOpen);
     menuToggle.setAttribute("aria-expanded", String(isOpen));
     menuToggle.setAttribute("aria-label", isOpen ? "Cerrar menú de navegación" : "Abrir menú de navegación");
+  };
+  menuToggle.addEventListener("click", function () {
+    setMenuOpen(!mainNav.classList.contains("is-open"));
   });
   mainNav.querySelectorAll("a").forEach(function (link) {
-    link.addEventListener("click", function () {
-      mainNav.classList.remove("is-open");
-      menuToggle.setAttribute("aria-expanded", "false");
-    });
+    link.addEventListener("click", function () { setMenuOpen(false); });
+  });
+  // Cierra el menú móvil al tocar fuera del recuadro o al presionar Escape
+  document.addEventListener("click", function (e) {
+    if (mainNav.classList.contains("is-open") && !mainNav.contains(e.target) && !menuToggle.contains(e.target)) {
+      setMenuOpen(false);
+    }
+  });
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "Escape" && mainNav.classList.contains("is-open")) setMenuOpen(false);
   });
 
   /* ============================================================
