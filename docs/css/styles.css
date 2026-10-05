@@ -259,7 +259,7 @@ button { font-family: inherit; cursor: pointer; }
 /* Buscador del header */
 .header-search { position: relative; }
 .header-search input[type="search"] {
-  width: 120px;
+  width: 165px;
   font: inherit;
   font-size: 0.85rem;
   color: #fff;
@@ -269,7 +269,7 @@ button { font-family: inherit; cursor: pointer; }
   padding: 0.45rem 0.9rem;
   transition: width 0.25s var(--ease), background 0.2s var(--ease);
 }
-.header-search input[type="search"]:focus { width: 210px; background: rgba(244, 236, 230, 0.14); outline: none; }
+.header-search input[type="search"]:focus { width: 220px; background: rgba(244, 236, 230, 0.14); outline: none; }
 .header-search input[type="search"]::placeholder { color: var(--color-muted); }
 .header-search-results {
   position: absolute;
@@ -590,6 +590,8 @@ button { font-family: inherit; cursor: pointer; }
   background: var(--color-black);
   border-bottom: 1px solid var(--color-line);
 }
+.indicators-head { padding-top: var(--space-5); }
+.indicators-head .section-title { max-width: none; }
 .indicators-list {
   display: flex;
   flex-wrap: wrap;
@@ -1146,6 +1148,17 @@ button { font-family: inherit; cursor: pointer; }
 /* ==========================================================================
    Responsive — Tablet
    ========================================================================== */
+/* Pantallas medianas: compacta el header para que el buscador y "Contacto" quepan completos */
+@media (min-width: 961px) and (max-width: 1240px) {
+  .header-inner { gap: var(--space-2); }
+  .main-nav { gap: var(--space-3); }
+  .header-actions { gap: var(--space-2); }
+  .brand-mark { width: 56px; height: 56px; }
+}
+@media (min-width: 961px) and (max-width: 1100px) {
+  .header-social { display: none; }
+}
+
 @media (max-width: 960px) {
   .main-nav { display: none; }
   .menu-toggle { display: flex; }
