@@ -605,6 +605,10 @@ button { font-family: inherit; cursor: pointer; }
 }
 .indicators-head { padding-top: 4.4rem; }
 .indicators-head .section-title { max-width: none; }
+/* En escritorio el título va en una sola línea: el tamaño se adapta al ancho de la pantalla */
+@media (min-width: 961px) {
+  .indicators-head .section-title { white-space: nowrap; font-size: clamp(1.15rem, 1.95vw, 2rem); }
+}
 .indicators-list {
   display: flex;
   flex-wrap: wrap;
@@ -700,7 +704,6 @@ button { font-family: inherit; cursor: pointer; }
   grid-template-columns: 2fr 1fr 1fr;
   gap: var(--space-3);
   margin-top: var(--space-4);
-  margin-bottom: var(--space-4);
 }
 .catalog-promos.has-1-side { grid-template-columns: 2fr 1fr; }
 .catalog-promos.has-0-side { grid-template-columns: 1fr; }
@@ -1501,3 +1504,30 @@ button { font-family: inherit; cursor: pointer; }
 .cookie-banner p { margin: 0; font-size: 0.85rem; color: var(--color-muted); max-width: 640px; }
 .cookie-banner a { color: var(--color-cream); text-decoration: underline; }
 .cookie-banner-actions { display: flex; gap: var(--space-2); flex-shrink: 0; }
+
+/* ==========================================================================
+   Espaciado uniforme de las secciones del inicio (igual que Herencia Orgánica)
+   ========================================================================== */
+:root {
+  --sec-pad-top: 4.8rem;
+  --sec-pad-bottom: 6.4rem;
+}
+#catalogo.catalog-section,
+#origen.origin-section,
+.newsletter-bar { padding-top: var(--sec-pad-top); padding-bottom: var(--sec-pad-bottom); }
+.indicators-head { padding-top: var(--sec-pad-top); }
+.indicators-list { padding-bottom: var(--sec-pad-bottom); }
+.units-section,
+.sustainability-block { padding-block: 0; }
+.unit-block,
+#carnes-selectas.unit-block,
+.sustainability-block .unit-block:first-child { padding-top: var(--sec-pad-top); padding-bottom: var(--sec-pad-bottom); }
+.impact-section { padding-block: 0; }
+.impact-inner { padding-top: var(--sec-pad-top); padding-bottom: var(--sec-pad-bottom); }
+
+@media (max-width: 960px) {
+  :root {
+    --sec-pad-top: 3.2rem;
+    --sec-pad-bottom: 4rem;
+  }
+}
