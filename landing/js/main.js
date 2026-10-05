@@ -11,9 +11,9 @@
   var WHATSAPP_MESSAGES = {
     header: "Hola MACHES, quisiera más información.",
     pedido: "Hola MACHES, quisiera hacer un pedido.",
-    carnes: "Hola, quisiera cotizar un pedido de Carnes Selectas - MACHES.",
-    catering: "Hola, quisiera cotizar el servicio de Catering Criollo - MACHES.",
-    herencia: "Hola, quisiera cotizar Herencia Orgánica - MACHES.",
+    carnes: "Hola MACHES, deseo información y cotización general de \"carnes de selección\".",
+    catering: "Hola MACHES, deseo información y cotización general de \"catering criollo\".",
+    herencia: "Hola MACHES, deseo información y cotización general de \"abono orgánico\".",
     chancho: "Hola MACHES, quisiera reservar un lote de chancho por mayor.",
     footer: "Hola MACHES, quisiera más información.",
     flotante: "Hola MACHES, quisiera más información.",
@@ -32,7 +32,7 @@
 
   document.querySelectorAll("[data-whatsapp-product]").forEach(function (el) {
     var product = el.getAttribute("data-whatsapp-product");
-    el.setAttribute("href", buildWhatsAppLink("Hola MACHES, quisiera cotizar: " + product + "."));
+    el.setAttribute("href", buildWhatsAppLink("Hola MACHES, me interesa cotizar y saber disponibilidad de: " + product + ". ¿Me brindan más detalles por favor?"));
   });
 
   /* ============================================================
@@ -109,6 +109,13 @@
         var target = document.getElementById(targetId);
         if (target) target.scrollIntoView({ behavior: "smooth", block: "start" });
       }
+    });
+  });
+
+  // Enlaces del menú "Productos" del header: tambien deben abrir la categoría
+  document.querySelectorAll('#productsMenu a[href^="#cat-"]').forEach(function (link) {
+    link.addEventListener("click", function () {
+      openCategory(link.getAttribute("href").slice(1));
     });
   });
 
@@ -351,6 +358,35 @@
       // confirma en pantalla; los datos no se envían a ningún lado todavía).
       var success = document.getElementById("newsletterSuccess");
       newsletterForm.reset();
+      if (success) success.classList.add("is-visible");
+    });
+  }
+
+  /* ============================================================
+     Formulario de Contacto: arma el mensaje y abre WhatsApp
+     ============================================================ */
+  var contactForm = document.getElementById("contactForm");
+  if (contactForm) {
+    contactForm.addEventListener("submit", function (e) {
+      e.preventDefault();
+      var nombre = contactForm.nombre.value.trim();
+      var correo = contactForm.correo.value.trim();
+      var empresa = contactForm.empresa.value.trim();
+      var ruc = contactForm.ruc.value.trim();
+      var telefono = contactForm.telefono.value.trim();
+      var mensaje = contactForm.mensaje.value.trim();
+
+      var lines = ["Hola MACHES, quisiera hacer una consulta.", "Nombre: " + nombre];
+      if (empresa) lines.push("Empresa: " + empresa);
+      if (ruc) lines.push("RUC: " + ruc);
+      lines.push("Teléfono: " + telefono);
+      lines.push("Correo: " + correo);
+      lines.push("Mensaje: " + mensaje);
+
+      window.open(buildWhatsAppLink(lines.join("\n")), "_blank", "noopener");
+
+      var success = document.getElementById("contactFormSuccess");
+      contactForm.reset();
       if (success) success.classList.add("is-visible");
     });
   }

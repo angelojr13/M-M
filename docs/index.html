@@ -27,6 +27,10 @@
     </a>
 
     <nav class="main-nav" id="mainNav" aria-label="Navegación principal">
+      <form class="header-search" id="headerSearchForm" role="search" action="index.html" method="get" autocomplete="off">
+        <input type="search" id="productSearch" name="buscar" placeholder="Buscar producto…" aria-label="Buscar producto">
+        <div class="header-search-results" id="searchResults" hidden></div>
+      </form>
       <div class="nav-dropdown" id="productsDropdown">
         <button class="nav-dropdown-toggle" id="productsToggle" type="button" aria-expanded="false" aria-controls="productsMenu">
           Productos <span class="nav-dropdown-arrow" aria-hidden="true">&#9662;</span>
@@ -40,7 +44,6 @@
           <a href="#cat-derivados">Derivados</a>
         </div>
       </div>
-      <a href="#origen">Nuestro Origen</a>
       <div class="nav-dropdown" id="unitsDropdown">
         <button class="nav-dropdown-toggle" id="unitsToggle" type="button" aria-expanded="false" aria-controls="unitsMenu">
           Líneas de Negocio <span class="nav-dropdown-arrow" aria-hidden="true">&#9662;</span>
@@ -51,14 +54,11 @@
           <a href="#herencia-organica">Herencia Orgánica</a>
         </div>
       </div>
+      <a href="#origen">Origen</a>
       <a href="#sostenibilidad">Sostenibilidad</a>
     </nav>
 
     <div class="header-actions">
-      <form class="header-search" id="headerSearchForm" role="search" action="index.html" method="get" autocomplete="off">
-        <input type="search" id="productSearch" name="buscar" placeholder="Buscar producto…" aria-label="Buscar producto">
-        <div class="header-search-results" id="searchResults" hidden></div>
-      </form>
       <div class="header-social">
         <a href="https://www.instagram.com/grupomaches/?hl=es" target="_blank" rel="noopener" aria-label="Instagram de MACHES">
           <svg viewBox="0 0 24 24" width="17" height="17" aria-hidden="true"><path fill="currentColor" d="M12 2.2c2.7 0 3 0 4 .05 1 .05 1.7.2 2.3.45.6.25 1.1.6 1.6 1.1.5.5.85 1 1.1 1.6.25.6.4 1.3.45 2.3.05 1 .05 1.3.05 4s0 3-.05 4c-.05 1-.2 1.7-.45 2.3-.25.6-.6 1.1-1.1 1.6-.5.5-1 .85-1.6 1.1-.6.25-1.3.4-2.3.45-1 .05-1.3.05-4 .05s-3 0-4-.05c-1-.05-1.7-.2-2.3-.45-.6-.25-1.1-.6-1.6-1.1-.5-.5-.85-1-1.1-1.6-.25-.6-.4-1.3-.45-2.3-.05-1-.05-1.3-.05-4s0-3 .05-4c.05-1 .2-1.7.45-2.3.25-.6.6-1.1 1.1-1.6.5-.5 1-.85 1.6-1.1.6-.25 1.3-.4 2.3-.45 1-.05 1.3-.05 4-.05Zm0 2.6a5.2 5.2 0 1 0 0 10.4 5.2 5.2 0 0 0 0-10.4Zm0 8.6a3.4 3.4 0 1 1 0-6.8 3.4 3.4 0 0 1 0 6.8Zm5.4-8.8a1.2 1.2 0 1 1-2.4 0 1.2 1.2 0 0 1 2.4 0Z"/></svg>
@@ -70,8 +70,7 @@
           <svg viewBox="0 0 24 24" width="17" height="17" aria-hidden="true"><path fill="currentColor" d="M6.94 5a2 2 0 1 1-4 0 2 2 0 0 1 4 0ZM3.2 8.75h3.5V21H3.2V8.75Zm6.2 0h3.36v1.68h.05c.47-.88 1.6-1.8 3.3-1.8 3.53 0 4.18 2.32 4.18 5.35V21h-3.5v-6.4c0-1.53-.03-3.5-2.13-3.5-2.14 0-2.47 1.67-2.47 3.39V21H9.4V8.75Z"/></svg>
         </a>
       </div>
-      <a class="btn btn-fucsia header-contacto" data-whatsapp-cta="header" href="#" target="_blank" rel="noopener">
-        <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2.05 22l5.29-1.39a9.9 9.9 0 0 0 4.7 1.2h.01c5.46 0 9.9-4.45 9.9-9.9C21.96 6.45 17.5 2 12.04 2Zm5.8 14.16c-.24.68-1.4 1.3-1.93 1.38-.5.08-1.12.11-1.8-.11-.42-.13-.95-.3-1.64-.6-2.88-1.24-4.76-4.13-4.9-4.32-.14-.19-1.17-1.56-1.17-2.98 0-1.42.75-2.11 1.01-2.4.27-.28.58-.35.78-.35.2 0 .39 0 .56.01.18.01.42-.07.66.5.24.6.83 2.06.9 2.21.07.15.12.33.02.53-.1.19-.15.31-.29.48-.15.17-.31.38-.44.51-.15.15-.3.31-.13.6.17.29.75 1.24 1.62 2.01 1.11.99 2.05 1.3 2.34 1.45.29.15.46.13.63-.07.17-.2.72-.84.92-1.13.19-.29.39-.24.65-.14.27.1 1.7.8 1.99.95.29.15.49.22.56.34.08.13.08.72-.16 1.4Z"/></svg>
+      <a class="btn btn-fucsia header-contacto" href="contacto.html">
         <span>Contacto</span>
       </a>
       <button class="menu-toggle" id="menuToggle" aria-expanded="false" aria-controls="mainNav" aria-label="Abrir menú de navegación">
@@ -1119,7 +1118,7 @@
         <a href="index.html#origen">Nuestro Origen</a>
         <a href="index.html#lineas-negocio">Líneas de Negocio</a>
         <a href="index.html#sostenibilidad">Sostenibilidad</a>
-        <a href="index.html#contacto">Contacto</a>
+        <a href="contacto.html">Contacto</a>
       </nav>
     </div>
 
@@ -1140,6 +1139,7 @@
         Contacto
       </h4>
       <a class="footer-phone" data-whatsapp-cta="footer" href="#" target="_blank" rel="noopener">+51 930 968 933</a>
+      <a class="footer-email" href="mailto:grupomaches@gmail.com">grupomaches@gmail.com</a>
     </div>
   </div>
 

@@ -189,7 +189,7 @@ button { font-family: inherit; cursor: pointer; }
 .main-nav a:hover::after { transform: scaleX(1); }
 
 .header-actions { display: flex; align-items: center; gap: var(--space-3); }
-.header-contacto svg { color: #fff; }
+.header-contacto { font-size: 0.78rem; padding: 0.7rem 1.3rem; }
 
 .menu-toggle {
   display: none;
@@ -298,8 +298,8 @@ button { font-family: inherit; cursor: pointer; }
 
 /* Redes sociales del header */
 .header-social { display: flex; align-items: center; gap: var(--space-2); }
-.header-social a { color: var(--color-muted); transition: color 0.2s var(--ease); }
-.header-social a:hover { color: var(--color-fucsia); }
+.header-social a { color: var(--color-fucsia); transition: color 0.2s var(--ease); }
+.header-social a:hover { color: #fff; }
 
 /* Boton flotante de WhatsApp */
 .whatsapp-float {
@@ -898,6 +898,65 @@ button { font-family: inherit; cursor: pointer; }
 .impact-text { color: var(--color-muted); font-size: 0.92rem; }
 
 /* ==========================================================================
+   Formulario de Contacto
+   ========================================================================== */
+.contact-form-section { background: var(--color-black-soft); border-block: 1px solid var(--color-line); }
+.contact-form-section.is-page-top {
+  padding-top: calc(var(--header-h) + var(--space-5));
+  border-top: none;
+}
+.contact-form-intro { color: var(--color-muted); font-size: 0.95rem; margin-top: var(--space-2); max-width: 60ch; }
+.contact-page-grid {
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: var(--space-6);
+  align-items: center;
+}
+.contact-page-visual {
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  border: 1px solid var(--color-line);
+  box-shadow: 0 20px 50px -20px rgba(0, 0, 0, 0.6);
+}
+.contact-page-visual img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.contact-form { max-width: 640px; margin-top: var(--space-4); }
+.contact-form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-3);
+}
+.contact-field { display: flex; flex-direction: column; gap: 0.4rem; margin-bottom: var(--space-3); }
+.contact-field label {
+  font-family: var(--font-display);
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+}
+.contact-field input,
+.contact-field textarea {
+  padding: 0.85rem 1rem;
+  background: var(--color-black);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-sm);
+  color: var(--color-cream);
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  resize: vertical;
+}
+.contact-field input:focus,
+.contact-field textarea:focus { outline: none; border-color: var(--color-fucsia); }
+.contact-form-submit { margin-top: var(--space-1); }
+.contact-form-success {
+  display: none;
+  color: var(--color-cream);
+  font-size: 0.9rem;
+  margin-top: var(--space-2);
+}
+.contact-form-success.is-visible { display: block; }
+
+/* ==========================================================================
    Boletín
    ========================================================================== */
 .newsletter-bar {
@@ -1026,6 +1085,16 @@ button { font-family: inherit; cursor: pointer; }
   transition: color 0.2s var(--ease);
 }
 .footer-phone:hover { color: var(--color-fucsia); }
+.footer-email {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5em;
+  margin-top: var(--space-1);
+  color: var(--color-muted);
+  font-size: 0.92rem;
+  transition: color 0.2s var(--ease);
+}
+.footer-email:hover { color: var(--color-fucsia); }
 .footer-brand { display: flex; align-items: center; gap: var(--space-2); margin-bottom: var(--space-2); }
 .footer-logo { height: 64px; width: auto; }
 .footer-brand-name {
@@ -1081,6 +1150,9 @@ button { font-family: inherit; cursor: pointer; }
   .main-nav { display: none; }
   .menu-toggle { display: flex; }
 
+  .contact-page-grid { grid-template-columns: 1fr; }
+  .contact-page-visual { order: -1; max-height: 320px; }
+
   .main-nav.is-open {
     display: flex;
     flex-direction: column;
@@ -1107,8 +1179,7 @@ button { font-family: inherit; cursor: pointer; }
 
   .header-search, .header-social { display: none; }
 
-  .header-contacto span { display: none; }
-  .header-contacto { padding: 0.65rem; }
+  .header-contacto { padding: 0.6rem 1rem; font-size: 0.7rem; }
 
   .origin-grid { grid-template-columns: 1fr; gap: var(--space-5); }
   .origin-stat { justify-self: start; }
@@ -1142,6 +1213,7 @@ button { font-family: inherit; cursor: pointer; }
   .hero-content { max-width: 100%; }
 
   .section { padding-block: var(--space-6); }
+  .contact-form-row { grid-template-columns: 1fr; }
 
   .indicators-list { justify-content: flex-start; gap: var(--space-3); }
   .meat-types-grid { grid-template-columns: 1fr; gap: var(--space-2); }
