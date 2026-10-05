@@ -527,7 +527,7 @@ button { font-family: inherit; cursor: pointer; }
 #carnes-selectas.unit-block { padding-top: var(--space-3); padding-bottom: var(--space-5); }
 .unit-block-alt { border-block: 1px solid var(--color-line); }
 #catering-criollo.unit-block-alt { background: var(--color-black); border-bottom: none; }
-.sustainability-block { background: var(--color-black-soft); padding-block: var(--space-3); border-top: none; }
+.sustainability-block { background: var(--color-black); padding-block: var(--space-3); }
 .sustainability-block .unit-block:first-child { padding-top: var(--space-3); }
 
 .unit-grid {
@@ -684,7 +684,16 @@ button { font-family: inherit; cursor: pointer; }
   border-radius: var(--radius-md);
   padding: var(--space-4);
 }
-.catalog-category.is-open { display: block; }
+.catalog-category.is-open { display: block; animation: catalog-open 0.38s var(--ease) both; }
+.catalog-category.is-closing { animation: catalog-close 0.26s var(--ease) both; }
+@keyframes catalog-open {
+  from { opacity: 0; transform: translateY(-14px) scale(0.985); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes catalog-close {
+  from { opacity: 1; transform: none; }
+  to { opacity: 0; transform: translateY(-14px) scale(0.985); }
+}
 .catalog-category-title {
   font-family: var(--font-display);
   font-size: 1.3rem;
@@ -962,7 +971,7 @@ button { font-family: inherit; cursor: pointer; }
    Boletín
    ========================================================================== */
 .newsletter-bar {
-  background: var(--color-black);
+  background: #2a2626;
   border-top: 1px solid var(--color-line);
   padding-block: var(--space-5);
 }

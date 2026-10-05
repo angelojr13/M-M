@@ -101,24 +101,46 @@
   var catButtons = Array.prototype.slice.call(document.querySelectorAll(".catalog-category-btn[data-target]"));
   var catBlocks = Array.prototype.slice.call(document.querySelectorAll(".catalog-category"));
 
+  var catCloseMs = window.matchMedia("(prefers-reduced-motion: reduce)").matches ? 0 : 260;
+
   function openCategory(id) {
     catButtons.forEach(function (b) { b.classList.toggle("is-active", b.getAttribute("data-target") === id); });
-    catBlocks.forEach(function (c) { c.classList.toggle("is-open", c.id === id); });
+    catBlocks.forEach(function (c) {
+      window.clearTimeout(c._closeTimer);
+      c.classList.remove("is-closing");
+      c.classList.toggle("is-open", c.id === id);
+    });
+  }
+
+  // Cierra la categoría abierta con animación (el .is-closing la desvanece antes de ocultarla)
+  function closeCategories() {
+    catButtons.forEach(function (b) { b.classList.remove("is-active"); });
+    catBlocks.forEach(function (c) {
+      if (!c.classList.contains("is-open") || c.classList.contains("is-closing")) return;
+      c.classList.add("is-closing");
+      c._closeTimer = window.setTimeout(function () {
+        c.classList.remove("is-open", "is-closing");
+      }, catCloseMs);
+    });
   }
 
   catButtons.forEach(function (btn) {
     btn.addEventListener("click", function () {
       var targetId = btn.getAttribute("data-target");
       if (btn.classList.contains("is-active")) {
-        btn.classList.remove("is-active");
-        var el = document.getElementById(targetId);
-        if (el) el.classList.remove("is-open");
+        closeCategories();
       } else {
         openCategory(targetId);
         var target = document.getElementById(targetId);
         if (target) target.scrollIntoView({ behavior: "smooth", block: "start" });
       }
     });
+  });
+
+  // Clic fuera del recuadro de la categoría (y fuera de los círculos y del header) la cierra
+  document.addEventListener("click", function (e) {
+    if (e.target.closest(".catalog-category, .catalog-category-btn, #siteHeader")) return;
+    closeCategories();
   });
 
   // Enlaces del menú "Productos" del header: tambien deben abrir la categoría
