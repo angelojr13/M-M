@@ -80,6 +80,32 @@
   }
 
   /* ============================================================
+     Categorías circulares del catálogo (acordeón, cerrado por defecto)
+     ============================================================ */
+  var catButtons = Array.prototype.slice.call(document.querySelectorAll(".catalog-category-btn[data-target]"));
+  var catBlocks = Array.prototype.slice.call(document.querySelectorAll(".catalog-category"));
+
+  function openCategory(id) {
+    catButtons.forEach(function (b) { b.classList.toggle("is-active", b.getAttribute("data-target") === id); });
+    catBlocks.forEach(function (c) { c.classList.toggle("is-open", c.id === id); });
+  }
+
+  catButtons.forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      var targetId = btn.getAttribute("data-target");
+      if (btn.classList.contains("is-active")) {
+        btn.classList.remove("is-active");
+        var el = document.getElementById(targetId);
+        if (el) el.classList.remove("is-open");
+      } else {
+        openCategory(targetId);
+        var target = document.getElementById(targetId);
+        if (target) target.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    });
+  });
+
+  /* ============================================================
      Buscador de productos
      ============================================================ */
   var searchForm = document.getElementById("headerSearchForm");
@@ -93,6 +119,8 @@
 
   function highlightProduct(card) {
     clearHighlights();
+    var catBlock = card.closest(".catalog-category");
+    if (catBlock) openCategory(catBlock.id);
     card.classList.add("is-highlighted");
     card.scrollIntoView({ behavior: "smooth", block: "center" });
     window.setTimeout(function () { card.classList.remove("is-highlighted"); }, 1800);
@@ -148,16 +176,6 @@
     // En páginas sin catálogo (legales), el formulario navega normal a index.html?buscar=...
   }
 
-  /* ============================================================
-     Flechas de la barra de categorías del catálogo
-     ============================================================ */
-  var catalogTabs = document.querySelector(".catalog-tabs");
-  var tabsPrev = document.querySelector(".catalog-tabs-prev");
-  var tabsNext = document.querySelector(".catalog-tabs-next");
-  if (catalogTabs && tabsPrev && tabsNext) {
-    tabsPrev.addEventListener("click", function () { catalogTabs.scrollBy({ left: -200, behavior: "smooth" }); });
-    tabsNext.addEventListener("click", function () { catalogTabs.scrollBy({ left: 200, behavior: "smooth" }); });
-  }
 
   /* ============================================================
      Hero slider
