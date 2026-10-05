@@ -712,7 +712,7 @@ button { font-family: inherit; cursor: pointer; }
   justify-content: flex-end;
   align-items: flex-start;
   gap: 0.3rem;
-  min-height: 210px;
+  min-height: 240px;
   padding: var(--space-3);
   border-radius: var(--radius-md);
   overflow: hidden;
@@ -765,6 +765,7 @@ button { font-family: inherit; cursor: pointer; }
   border-radius: 999px;
 }
 .promo-card .promo-badge { margin-bottom: auto; }
+.promo-card .promo-name { margin-top: var(--space-2); }
 .promo-name { font-family: var(--font-display); font-size: 1.1rem; font-weight: 700; line-height: 1.2; }
 .promo-main .promo-name { font-size: 1.7rem; }
 .promo-prices { display: flex; align-items: baseline; flex-wrap: wrap; gap: 0.25rem 0.55rem; }
@@ -772,6 +773,9 @@ button { font-family: inherit; cursor: pointer; }
 .promo-new { color: #fff; background: var(--color-fucsia); padding: 0.05em 0.45em; border-radius: 4px; font-size: 1.05rem; }
 .promo-main .promo-new { font-size: 1.4rem; }
 .promo-unit { color: var(--color-cream); font-size: 0.8rem; }
+.promo-old-label { color: var(--color-muted); font-size: 0.75rem; }
+.promo-note { color: var(--color-cream); font-size: 0.8rem; font-weight: 600; }
+.promo-main .promo-note { font-size: 0.9rem; }
 .promo-card.is-swapping > * { animation: promo-swap 0.5s var(--ease) both; }
 @keyframes promo-swap {
   from { opacity: 0; transform: translateY(8px); }
@@ -872,6 +876,9 @@ button { font-family: inherit; cursor: pointer; }
 }
 .product-uses { font-size: 0.82rem; color: rgba(10, 8, 8, 0.65); margin-bottom: var(--space-3); text-align: left; }
 .product-uses strong { color: var(--color-black); }
+.product-includes { font-size: 0.82rem; color: rgba(10, 8, 8, 0.65); margin-bottom: var(--space-1); text-align: left; }
+.product-includes strong { color: var(--color-black); }
+.product-savings { font-size: 0.78rem; font-weight: 700; color: var(--color-fucsia); margin-bottom: var(--space-2); text-align: left; }
 .product-cta { margin-top: auto; text-align: center; font-size: 0.82rem; padding: 0.6rem 1rem; }
 
 /* ==========================================================================

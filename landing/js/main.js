@@ -21,11 +21,13 @@
   };
 
   // Ofertas que se muestran bajo los círculos del catálogo (rotan cada 3 segundos).
-  // Para cambiarlas solo edita esta lista: nombre, precio antes, precio ahora, unidad e imagen.
+  // Precios tomados de la propuesta de catálogo (Catalogo_Propuesta_MACHES.xlsx).
+  // Para cambiarlas solo edita esta lista. "antesLabel" y "nota" son opcionales.
   var PROMOCIONES = [
-    { nombre: "Chuleta de Lomo de Cerdo", antes: "S/ 25.00", ahora: "S/ 22.00", unidad: "x kg", imagen: "assets/hero-oferta-chancho.jpg" },
-    { nombre: "Pack Chicharronero", antes: "S/ 75.00", ahora: "S/ 65.00", unidad: "el pack", imagen: "assets/hero-carnes-selectas-bandejas.jpg" },
-    { nombre: "Hamburguesas Artesanales", antes: "S/ 28.00", ahora: "S/ 25.00", unidad: "paquete x 4", imagen: "assets/maches-productos-granja.jpg" }
+    { nombre: "Pack Parrillero Familiar", antesLabel: "Por separado", antes: "S/ 170.50", ahora: "S/ 152.90", nota: "Ahorras S/ 17.60", imagen: "assets/hero-carnes-selectas-bandejas.jpg" },
+    { nombre: "Chuleta de lomo", antes: "S/ 22.00", ahora: "S/ 20.90", unidad: "x kg", imagen: "assets/hero-oferta-chancho.jpg" },
+    { nombre: "Pack Caja China / Cilindro", antesLabel: "Por separado", antes: "S/ 121.60", ahora: "S/ 111.90", nota: "Adobo y sazonador de cortesía", imagen: "assets/maches-carnes-selectas.jpg" },
+    { nombre: "Pack Chicharronero", antesLabel: "Por separado", antes: "S/ 93.15", ahora: "S/ 85.90", nota: "Ahorras S/ 7.25", imagen: "assets/hero-carnes-selectas.jpg" }
   ];
   var PROMO_INTERVAL_MS = 3000;
 
@@ -172,9 +174,16 @@
     };
     var promoPrices = function (p) {
       var wrap = promoEl("span", "promo-prices");
+      if (p.antesLabel) wrap.appendChild(promoEl("span", "promo-old-label", p.antesLabel));
       if (p.antes) wrap.appendChild(promoEl("s", "promo-old", p.antes));
       wrap.appendChild(promoEl("strong", "promo-new", p.ahora));
       if (p.unidad) wrap.appendChild(promoEl("span", "promo-unit", p.unidad));
+      if (p.nota) {
+        var frag = document.createDocumentFragment();
+        frag.appendChild(wrap);
+        frag.appendChild(promoEl("span", "promo-note", p.nota));
+        return frag;
+      }
       return wrap;
     };
 
