@@ -61,23 +61,30 @@
   });
 
   /* ============================================================
-     Menú desplegable "Productos"
+     Menús desplegables del nav ("Productos", "Líneas de Negocio")
      ============================================================ */
-  var productsDropdown = document.getElementById("productsDropdown");
-  var productsToggle = document.getElementById("productsToggle");
-  if (productsDropdown && productsToggle) {
-    productsToggle.addEventListener("click", function (e) {
+  Array.prototype.slice.call(document.querySelectorAll(".nav-dropdown")).forEach(function (dropdown) {
+    var toggle = dropdown.querySelector(".nav-dropdown-toggle");
+    if (!toggle) return;
+    toggle.addEventListener("click", function (e) {
       e.stopPropagation();
-      var isOpen = productsDropdown.classList.toggle("is-open");
-      productsToggle.setAttribute("aria-expanded", String(isOpen));
+      var isOpen = dropdown.classList.toggle("is-open");
+      toggle.setAttribute("aria-expanded", String(isOpen));
+      document.querySelectorAll(".nav-dropdown.is-open").forEach(function (other) {
+        if (other !== dropdown) {
+          other.classList.remove("is-open");
+          var otherToggle = other.querySelector(".nav-dropdown-toggle");
+          if (otherToggle) otherToggle.setAttribute("aria-expanded", "false");
+        }
+      });
     });
     document.addEventListener("click", function (e) {
-      if (!productsDropdown.contains(e.target)) {
-        productsDropdown.classList.remove("is-open");
-        productsToggle.setAttribute("aria-expanded", "false");
+      if (!dropdown.contains(e.target)) {
+        dropdown.classList.remove("is-open");
+        toggle.setAttribute("aria-expanded", "false");
       }
     });
-  }
+  });
 
   /* ============================================================
      Categorías circulares del catálogo (acordeón, cerrado por defecto)
