@@ -527,7 +527,8 @@ button { font-family: inherit; cursor: pointer; }
 #carnes-selectas.unit-block { padding-top: var(--space-3); padding-bottom: var(--space-5); }
 .unit-block-alt { border-block: 1px solid var(--color-line); }
 #catering-criollo.unit-block-alt { background: var(--color-black); border-bottom: none; }
-.sustainability-block { background: var(--color-black); padding-block: var(--space-3); }
+.sustainability-block { background: var(--color-black-soft); padding-block: var(--space-3); border-top: none; }
+.impact-section { background: var(--color-black); border-top: 1px solid var(--color-line); padding-block: var(--space-3); }
 .sustainability-block .unit-block:first-child { padding-top: var(--space-3); }
 
 .unit-grid {
@@ -971,7 +972,7 @@ button { font-family: inherit; cursor: pointer; }
    Boletín
    ========================================================================== */
 .newsletter-bar {
-  background: #2a2626;
+  background: var(--color-black-soft);
   border-top: 1px solid var(--color-line);
   padding-block: var(--space-5);
 }
