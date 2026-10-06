@@ -686,7 +686,7 @@ button { font-family: inherit; cursor: pointer; }
   transform: translateY(-3px);
 }
 .catalog-category-btn.is-active .catalog-category-circle {
-  background: #fff;
+  background: var(--color-cream);
   color: var(--color-fucsia);
   transform: translateY(-3px);
 }
