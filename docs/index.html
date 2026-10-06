@@ -28,7 +28,7 @@
 
     <nav class="main-nav" id="mainNav" aria-label="Navegación principal">
       <form class="header-search" id="headerSearchForm" role="search" action="index.html" method="get" autocomplete="off">
-        <input type="search" id="productSearch" name="buscar" placeholder="Buscar producto…" aria-label="Buscar producto">
+        <input type="search" id="productSearch" name="buscar" placeholder="Buscar productos" aria-label="Buscar productos">
         <div class="header-search-results" id="searchResults" hidden></div>
       </form>
       <div class="nav-dropdown" id="productsDropdown">
@@ -91,15 +91,23 @@
 
     <div class="hero-track" id="heroTrack">
 
-      <article class="hero-slide is-active slide-heritage" role="group" aria-roledescription="diapositiva" aria-label="1 de 4"
-        data-cta-label="Haz tu Pedido" data-cta-key="pedido" data-cta-style="primary">
+      <article class="hero-slide is-active slide-oferta" role="group" aria-roledescription="diapositiva" aria-label="1 de 4"
+        data-cta-label="Reserva Ahora" data-cta-key="chancho" data-cta-style="primary">
         <div class="hero-content container">
-          <p class="hero-eyebrow">El Legado</p>
-          <h1 class="hero-title">Más de 20 años de<br>experiencia ganadera.</h1>
+          <p class="hero-badge">Oferta al Por Mayor</p>
+          <h1 class="hero-title">¡Lote de chancho en salida!</h1>
         </div>
       </article>
 
-      <article class="hero-slide slide-anguss" role="group" aria-roledescription="diapositiva" aria-label="2 de 4"
+      <article class="hero-slide slide-heritage" role="group" aria-roledescription="diapositiva" aria-label="2 de 4"
+        data-cta-label="Haz tu Pedido" data-cta-key="pedido" data-cta-style="primary">
+        <div class="hero-content container">
+          <p class="hero-eyebrow">El Legado</p>
+          <h2 class="hero-title">Más de 20 años de<br>experiencia ganadera.</h2>
+        </div>
+      </article>
+
+      <article class="hero-slide slide-anguss" role="group" aria-roledescription="diapositiva" aria-label="3 de 4"
         data-cta-label="Haz tu Pedido" data-cta-key="carnes" data-cta-style="primary">
         <div class="hero-content container">
           <p class="hero-eyebrow">La Proteína Premium</p>
@@ -107,7 +115,7 @@
         </div>
       </article>
 
-      <article class="hero-slide slide-organic" role="group" aria-roledescription="diapositiva" aria-label="3 de 4"
+      <article class="hero-slide slide-organic" role="group" aria-roledescription="diapositiva" aria-label="4 de 4"
         data-cta-label="Haz tu Pedido" data-cta-key="herencia" data-cta-style="primary">
         <div class="hero-content container">
           <p class="hero-eyebrow">La Sostenibilidad</p>
@@ -115,18 +123,10 @@
         </div>
       </article>
 
-      <article class="hero-slide slide-oferta" role="group" aria-roledescription="diapositiva" aria-label="4 de 4"
-        data-cta-label="Reserva Ahora" data-cta-key="chancho" data-cta-style="primary">
-        <div class="hero-content container">
-          <p class="hero-badge">Oferta al Por Mayor</p>
-          <h2 class="hero-title">¡Lote de chancho en salida!</h2>
-        </div>
-      </article>
-
     </div>
 
     <div class="hero-bottom-row container">
-      <a class="btn btn-primary hero-cta" id="heroCta" data-whatsapp-cta="pedido" href="#" target="_blank" rel="noopener">Haz tu Pedido</a>
+      <a class="btn btn-primary hero-cta" id="heroCta" data-whatsapp-cta="chancho" href="#" target="_blank" rel="noopener">Reserva Ahora</a>
       <div class="hero-dots" id="heroDots" role="tablist" aria-label="Seleccionar diapositiva">
         <button class="hero-dot is-active" role="tab" aria-selected="true" aria-label="Ir a diapositiva 1" data-slide="0"></button>
         <button class="hero-dot" role="tab" aria-selected="false" aria-label="Ir a diapositiva 2" data-slide="1"></button>
@@ -500,10 +500,7 @@
       <h3 class="catalog-category-title">Packs Parrilleros</h3>
       <div class="catalog-grid">
         <article class="product-card" data-name="Pack Parrillero Familiar">
-          <div class="product-img-placeholder" aria-hidden="true">
-            <svg viewBox="0 0 24 24" width="28" height="28" aria-hidden="true"><path fill="currentColor" d="M21 19V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2ZM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5ZM7 9a2 2 0 1 1 0-4 2 2 0 0 1 0 4Z"/></svg>
-            <span>Imagen próximamente</span>
-          </div>
+          <div class="product-img"><img src="assets/pack-parrillero-familiar.jpg" alt="Pack Parrillero Familiar MACHES" loading="lazy" width="500" height="500"></div>
           <h4 class="product-name">Pack Parrillero Familiar</h4>
           <p class="product-price"><span class="product-price-label">Precio referencial:</span> S/ 152.90</p>
           <p class="product-sale-note">Precio por menor</p>
@@ -512,10 +509,7 @@
           <a class="btn btn-primary product-cta" data-whatsapp-product="Pack Parrillero Familiar" href="#" target="_blank" rel="noopener">Cotizar</a>
         </article>
         <article class="product-card" data-name="Pack Chicharronero">
-          <div class="product-img-placeholder" aria-hidden="true">
-            <svg viewBox="0 0 24 24" width="28" height="28" aria-hidden="true"><path fill="currentColor" d="M21 19V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2ZM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5ZM7 9a2 2 0 1 1 0-4 2 2 0 0 1 0 4Z"/></svg>
-            <span>Imagen próximamente</span>
-          </div>
+          <div class="product-img"><img src="assets/pack-chicharronero.jpg" alt="Pack Chicharronero MACHES" loading="lazy" width="500" height="500"></div>
           <h4 class="product-name">Pack Chicharronero</h4>
           <p class="product-price"><span class="product-price-label">Precio referencial:</span> S/ 85.90</p>
           <p class="product-sale-note">Precio por menor</p>
@@ -524,10 +518,7 @@
           <a class="btn btn-primary product-cta" data-whatsapp-product="Pack Chicharronero" href="#" target="_blank" rel="noopener">Cotizar</a>
         </article>
         <article class="product-card" data-name="Pack Caja China / Cilindro">
-          <div class="product-img-placeholder" aria-hidden="true">
-            <svg viewBox="0 0 24 24" width="28" height="28" aria-hidden="true"><path fill="currentColor" d="M21 19V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2ZM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5ZM7 9a2 2 0 1 1 0-4 2 2 0 0 1 0 4Z"/></svg>
-            <span>Imagen próximamente</span>
-          </div>
+          <div class="product-img"><img src="assets/pack-caja-china.jpg" alt="Pack Caja China / Cilindro MACHES" loading="lazy" width="500" height="500"></div>
           <h4 class="product-name">Pack Caja China / Cilindro</h4>
           <p class="product-price"><span class="product-price-label">Precio referencial:</span> S/ 111.90</p>
           <p class="product-sale-note">Precio por menor</p>
@@ -536,10 +527,7 @@
           <a class="btn btn-primary product-cta" data-whatsapp-product="Pack Caja China / Cilindro" href="#" target="_blank" rel="noopener">Cotizar</a>
         </article>
         <article class="product-card" data-name="Pack Andino (Cordero y Cabrito)">
-          <div class="product-img-placeholder" aria-hidden="true">
-            <svg viewBox="0 0 24 24" width="28" height="28" aria-hidden="true"><path fill="currentColor" d="M21 19V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2ZM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5ZM7 9a2 2 0 1 1 0-4 2 2 0 0 1 0 4Z"/></svg>
-            <span>Imagen próximamente</span>
-          </div>
+          <div class="product-img"><img src="assets/pack-andino.jpg" alt="Pack Andino (Cordero y Cabrito) MACHES" loading="lazy" width="500" height="500"></div>
           <h4 class="product-name">Pack Andino (Cordero y Cabrito)</h4>
           <p class="product-price"><span class="product-price-label">Precio referencial:</span> S/ 81.90</p>
           <p class="product-sale-note">Precio por menor</p>
