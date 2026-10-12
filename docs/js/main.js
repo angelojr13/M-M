@@ -22,11 +22,31 @@
 
   // Ofertas que se muestran bajo los círculos del catálogo (rotan cada 3 segundos).
   // Precios tomados de la propuesta de catálogo (Catalogo_Propuesta_MACHES.xlsx).
-  // Para cambiarlas solo edita esta lista. "antesLabel" y "nota" son opcionales.
+  // Para cambiarlas solo edita esta lista. "antesLabel", "nota", "badge" y
+  // "mensajeWhatsapp" son opcionales ("mensajeWhatsapp" reemplaza el mensaje
+  // automático de WhatsApp por uno a medida, útil para sorteos o promos que
+  // no son solo un cambio de precio).
   // Ejemplo de una oferta:
   // { nombre: "Chuleta de lomo", antes: "S/ 22.00", ahora: "S/ 20.90", unidad: "x kg", imagen: "assets/hero-oferta-chancho.jpg" },
   // Mientras la lista esté vacía se muestra un recuadro de "Ofertas – Muy pronto".
-  var PROMOCIONES = [];
+  var PROMOCIONES = [
+    {
+      nombre: "Oferta Flash: Chuleta de Pierna",
+      antes: "S/ 18.90",
+      ahora: "S/ 16.90",
+      unidad: "el kg",
+      imagen: "assets/chuleta-de-pierna.jpg",
+      mensajeWhatsapp: "Hola MACHES, quiero aprovechar la Chuleta de Pierna a S/ 16.90 el kg. ¿Está disponible?"
+    },
+    {
+      nombre: "Sorteo Criollazo 🎁: Pack Chicharronero",
+      ahora: "¡Compra y participa!",
+      nota: "Por cada compra hasta el 29/oct participas por un Pack Chicharronero (S/ 85.90): 1.5 kg panceta + 1 kg chuleta + 1 kg brazuelo trozado + 250 g manteca.",
+      badge: "Sorteo",
+      imagen: "assets/pack-chicharronero.jpg",
+      mensajeWhatsapp: "Hola MACHES, quiero comprar para participar en el Sorteo Criollazo y ganar el Pack Chicharronero. ¿Cómo participo?"
+    }
+  ];
   var PROMO_INTERVAL_MS = 3000;
 
   function buildWhatsAppLink(message) {
@@ -197,7 +217,7 @@
 
     // Rectángulo grande: imágenes que se van alternando
     var promoMain = promoEl("a", "promo-main");
-    promoMain.href = buildWhatsAppLink(WHATSAPP_MESSAGES.promos);
+    promoMain.href = buildWhatsAppLink(PROMOCIONES[0].mensajeWhatsapp || WHATSAPP_MESSAGES.promos);
     promoMain.target = "_blank";
     promoMain.rel = "noopener";
     var promoSlides = PROMOCIONES.map(function (p, i) {
@@ -232,12 +252,13 @@
     var renderPromos = function () {
       promoSlides.forEach(function (s, i) { s.classList.toggle("is-active", i === promoIndex); });
       Array.prototype.forEach.call(promoDots.children, function (d, i) { d.classList.toggle("is-active", i === promoIndex); });
+      promoMain.href = buildWhatsAppLink(PROMOCIONES[promoIndex].mensajeWhatsapp || WHATSAPP_MESSAGES.promos);
       promoSide.forEach(function (card, k) {
         var p = PROMOCIONES[(promoIndex + k + 1) % PROMOCIONES.length];
-        card.href = buildWhatsAppLink("Hola MACHES, me interesa la oferta de " + p.nombre + " a " + p.ahora + (p.unidad ? " " + p.unidad : "") + ". ¿Sigue disponible?");
+        card.href = buildWhatsAppLink(p.mensajeWhatsapp || ("Hola MACHES, me interesa la oferta de " + p.nombre + " a " + p.ahora + (p.unidad ? " " + p.unidad : "") + ". ¿Sigue disponible?"));
         card.style.backgroundImage = "url('" + p.imagen + "')";
         card.innerHTML = "";
-        card.appendChild(promoEl("span", "promo-badge promo-badge-sm", "Oferta"));
+        card.appendChild(promoEl("span", "promo-badge promo-badge-sm", p.badge || "Oferta"));
         card.appendChild(promoEl("span", "promo-name", p.nombre));
         card.appendChild(promoPrices(p));
         card.classList.remove("is-swapping");
