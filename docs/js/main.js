@@ -583,21 +583,20 @@
       }
 
       if (typeof item.precio === "number" && item.precio > 0) {
-        var priceEl = card.querySelector(".product-price");
-        if (priceEl) {
-          var label = priceEl.querySelector(".product-price-label");
-          var labelHTML = label ? label.outerHTML : "";
-          var labelLength = label ? label.textContent.length : 0;
-          var rest = priceEl.textContent.slice(labelLength);
-          var newRest = rest.replace(
+        var valueEl = card.querySelector(".product-price-value");
+        if (valueEl) {
+          valueEl.textContent = valueEl.textContent.replace(
             /S\/\s*[\d.,]+/,
             "S/ " + item.precio.toFixed(2)
           );
-          priceEl.innerHTML = labelHTML + " " + newRest.trim();
         }
       }
     });
   }
+
+  var revealPrices = function () {
+    document.body.classList.add("prices-ready");
+  };
 
   if (window.fetch) {
     fetch(LIVE_PRICES_API)
@@ -607,6 +606,9 @@
       .then(applyLivePrices)
       .catch(function (err) {
         console.warn("No se pudieron cargar los precios en vivo:", err);
-      });
+      })
+      .then(revealPrices, revealPrices);
+  } else {
+    revealPrices();
   }
 })();

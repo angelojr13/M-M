@@ -885,6 +885,12 @@ button { font-family: inherit; cursor: pointer; }
   letter-spacing: 0.04em;
   color: rgba(10, 8, 8, 0.55);
 }
+.product-price-value {
+  visibility: hidden;
+}
+body.prices-ready .product-price-value {
+  visibility: visible;
+}
 .product-sale-note {
   display: block;
   font-size: 0.7rem;
