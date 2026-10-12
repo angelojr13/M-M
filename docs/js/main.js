@@ -532,4 +532,60 @@
       if (success) success.classList.add("is-visible");
     });
   }
+
+  /* ============================================================
+     Precios en vivo desde Google Sheets
+     Fuente: Catalogo_Propuesta_MACHES (vía Apps Script, solo lectura).
+     Cambia "Precio propuesto (S/)" o "Publicar en landing" en el Sheet
+     y se refleja aquí al recargar la página.
+     ============================================================ */
+  var LIVE_PRICES_API =
+    "https://script.google.com/macros/s/AKfycbyE8ayGaWK9XD9i-8yy3vMA5jCRaresObRdfzaAXE5tzmcLjlc3FKgXjDP0TXeCXkbyIA/exec";
+
+  function applyLivePrices(items) {
+    items.forEach(function (item) {
+      var card = document.querySelector('.product-card[data-id="' + item.id + '"]');
+      if (!card) return;
+
+      if (!item.publicar) {
+        card.style.display = "none";
+        return;
+      }
+      card.style.display = "";
+
+      if (item.nombre) {
+        var nameEl = card.querySelector(".product-name");
+        if (nameEl) nameEl.textContent = item.nombre;
+        card.setAttribute("data-name", item.nombre);
+        var cta = card.querySelector(".product-cta");
+        if (cta) cta.setAttribute("data-whatsapp-product", item.nombre);
+      }
+
+      if (typeof item.precio === "number" && item.precio > 0) {
+        var priceEl = card.querySelector(".product-price");
+        if (priceEl) {
+          var label = priceEl.querySelector(".product-price-label");
+          var labelHTML = label ? label.outerHTML : "";
+          var labelLength = label ? label.textContent.length : 0;
+          var rest = priceEl.textContent.slice(labelLength);
+          var newRest = rest.replace(
+            /S\/\s*[\d.,]+/,
+            "S/ " + item.precio.toFixed(2)
+          );
+          priceEl.innerHTML = labelHTML + " " + newRest.trim();
+        }
+      }
+    });
+  }
+
+  if (window.fetch) {
+    fetch(LIVE_PRICES_API)
+      .then(function (res) {
+        return res.json();
+      })
+      .then(applyLivePrices)
+      .catch(function (err) {
+        console.warn("No se pudieron cargar los precios en vivo:", err);
+      });
+  }
 })();
