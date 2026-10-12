@@ -391,7 +391,7 @@ button { font-family: inherit; cursor: pointer; }
 }
 .slide-oferta {
   background-color: var(--color-black);
-  background-image: url('../assets/hero-oferta-chancho.jpg');
+  background-image: url('../assets/hero-sorteo-chicharronero.jpg');
   background-position: center 30%;
 }
 

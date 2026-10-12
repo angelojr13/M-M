@@ -15,6 +15,7 @@
     catering: "Hola MACHES, deseo información y cotización general de \"catering criollo\".",
     herencia: "Hola MACHES, deseo información y cotización general de \"abono orgánico\".",
     chancho: "Hola MACHES, deseo información y cotización general de \"lote de chancho por mayor\".",
+    sorteo: "Hola MACHES, quiero comprar para participar en el sorteo y ganar el Pack Chicharronero. ¿Cómo participo?",
     footer: "Hola MACHES, quisiera más información.",
     flotante: "Hola MACHES, quisiera más información.",
     promos: "Hola MACHES, quiero ver las promociones vigentes."
@@ -33,18 +34,19 @@
   // Mientras la lista esté vacía se muestra un recuadro de "Ofertas – Muy pronto".
   var PROMOCIONES = [
     {
-      nombre: "Sorteo Criollazo 🎁: Pack Chicharronero",
+      nombre: "Jueves 29/10 sorteamos un Pack Chicharronero",
       ahora: "¡Compra y participa!",
-      nota: "Por cada compra hasta el 29/oct participas por un Pack Chicharronero (S/ 85.90): 1.5 kg panceta + 1 kg chuleta + 1 kg brazuelo trozado + 250 g manteca.",
-      badge: "Sorteo",
+      nota: "¡Por cada compra reclama tu ticket! Pack Chicharronero (valorizado en S/ 89.90): incluye 1.5 kg de panceta + 1 kg de chuleta + 1 kg de brazuelo trozado + 250 g de manteca.",
+      badge: "Sorteo Criollazo",
       imagen: "assets/pack-chicharronero.jpg",
-      mensajeWhatsapp: "Hola MACHES, quiero comprar para participar en el Sorteo Criollazo y ganar el Pack Chicharronero. ¿Cómo participo?"
+      mensajeWhatsapp: "Hola MACHES, quiero comprar para participar en el sorteo y ganar el Pack Chicharronero. ¿Cómo participo?"
     },
     {
-      nombre: "Oferta Flash: Chuleta de Pierna",
+      nombre: "Chuleta de Pierna",
       antes: "S/ 18.90",
       ahora: "S/ 16.90",
       unidad: "el kg",
+      badge: "OFERTA SEMANAL",
       imagen: "assets/chuleta-de-pierna.jpg",
       mensajeWhatsapp: "Hola MACHES, quiero aprovechar la Chuleta de Pierna a S/ 16.90 el kg. ¿Está disponible?"
     }
@@ -431,12 +433,13 @@
   document.querySelectorAll(".unit-slideshow").forEach(function (box) {
     var slides = Array.prototype.slice.call(box.querySelectorAll(".unit-slide"));
     if (slides.length < 2) return;
+    var interval = parseInt(box.getAttribute("data-interval"), 10) || 3000;
     var i = 0;
     window.setInterval(function () {
       slides[i].classList.remove("is-active");
       i = (i + 1) % slides.length;
       slides[i].classList.add("is-active");
-    }, 3000);
+    }, interval);
   });
 
   /* ============================================================
