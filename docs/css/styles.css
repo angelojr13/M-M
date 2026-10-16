@@ -899,8 +899,16 @@ button { font-family: inherit; cursor: pointer; }
   background-size: 200% 100%;
   animation: catalog-skeleton-pulse 1.4s ease-in-out infinite;
 }
+.promo-skeleton {
+  height: 110px;
+  border-radius: var(--radius-md, 14px);
+  background: linear-gradient(100deg, rgba(244, 236, 230, 0.06) 30%, rgba(244, 236, 230, 0.14) 50%, rgba(244, 236, 230, 0.06) 70%);
+  background-size: 200% 100%;
+  animation: catalog-skeleton-pulse 1.4s ease-in-out infinite;
+}
 @media (prefers-reduced-motion: reduce) {
-  .product-card-skeleton { animation: none; }
+  .product-card-skeleton,
+  .promo-skeleton { animation: none; }
 }
 @keyframes catalog-skeleton-pulse {
   0% { background-position: 200% 0; }

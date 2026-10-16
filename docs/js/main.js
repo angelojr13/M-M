@@ -21,37 +21,6 @@
     promos: "Hola MACHES, quiero ver las promociones vigentes."
   };
 
-  // Ofertas que se muestran bajo los círculos del catálogo.
-  // La primera siempre va en la tarjeta grande, la segunda en la tarjeta
-  // pequeña (no rotan, son fijas). Precios tomados de la propuesta de
-  // catálogo (Catalogo_Propuesta_MACHES.xlsx). Para cambiarlas solo edita
-  // esta lista. "antesLabel", "nota", "badge" y "mensajeWhatsapp" son
-  // opcionales ("mensajeWhatsapp" reemplaza el mensaje automático de
-  // WhatsApp por uno a medida, útil para sorteos o promos que no son solo
-  // un cambio de precio).
-  // Ejemplo de una oferta:
-  // { nombre: "Chuleta de lomo", antes: "S/ 22.00", ahora: "S/ 20.90", unidad: "x kg", imagen: "assets/hero-oferta-chancho.jpg" },
-  // Mientras la lista esté vacía se muestra un recuadro de "Ofertas – Muy pronto".
-  var PROMOCIONES = [
-    {
-      nombre: "Miércoles 23/12 sorteamos un Pack Chicharronero",
-      ahora: "¡Compra y participa!",
-      nota: "¡Por cada compra reclama tu ticket! Pack Chicharronero (valorizado en S/ 89.90): incluye 1.5 kg de panceta + 1 kg de chuleta + 1 kg de brazuelo trozado + 250 g de manteca.",
-      badge: "Sorteo Navideño",
-      imagen: "assets/pack-chicharronero.jpg",
-      mensajeWhatsapp: "Hola MACHES, quiero comprar para participar en el sorteo y ganar el Pack Chicharronero. ¿Cómo participo?"
-    },
-    {
-      nombre: "Chuleta de Pierna",
-      antes: "S/ 18.90",
-      ahora: "S/ 16.90",
-      unidad: "el kg",
-      badge: "OFERTA SEMANAL",
-      imagen: "assets/chuleta-de-pierna.jpg",
-      mensajeWhatsapp: "Hola MACHES, quiero aprovechar la Chuleta de Pierna a S/ 16.90 el kg. ¿Está disponible?"
-    }
-  ];
-
   function buildWhatsAppLink(message) {
     return "https://wa.me/" + WHATSAPP_NUMBER + "?text=" + encodeURIComponent(message);
   }
@@ -215,17 +184,45 @@
 
   /* ============================================================
      Franja de ofertas (bajo los círculos del catálogo)
+     Viene de la hoja "Promociones" del Sheet (vía la misma API del
+     catálogo). Se pinta más abajo, junto con el catálogo, después de
+     consultar la API (ver "Catálogo en vivo..." al final de este archivo).
      ============================================================ */
   var promoStrip = document.getElementById("promoStrip");
-  if (promoStrip && !PROMOCIONES.length) {
-    promoStrip.classList.add("has-0-side");
-    promoStrip.innerHTML =
-      '<a class="promo-main promo-empty" target="_blank" rel="noopener" href="' + buildWhatsAppLink(WHATSAPP_MESSAGES.promos) + '">' +
-      '<span class="promo-badge">Ofertas</span>' +
-      '<span class="promo-name">Muy pronto nuevas promociones</span>' +
-      '<span class="promo-cta">Consúltanos por WhatsApp →</span></a>';
+
+  function buildPromoImage(p) {
+    var img = document.createElement("img");
+    img.alt = p.nombre;
+    img.loading = "lazy";
+    if (p.imagen && /^https:\/\//i.test(p.imagen)) {
+      img.referrerPolicy = "no-referrer"; // Drive rechaza la imagen sin esto
+      img.src = p.imagen;
+    } else if (p.imagen) {
+      img.src = "assets/" + p.imagen;
+    }
+    return img;
   }
-  if (promoStrip && PROMOCIONES.length) {
+
+  function renderPromoStrip(promociones) {
+    if (!promoStrip) return;
+    promoStrip.innerHTML = "";
+    promoStrip.className = "catalog-promos container";
+
+    if (!promociones || !promociones.length) {
+      promoStrip.classList.add("has-0-side");
+      var empty = document.createElement("a");
+      empty.className = "promo-main promo-empty";
+      empty.target = "_blank";
+      empty.rel = "noopener";
+      empty.href = buildWhatsAppLink(WHATSAPP_MESSAGES.promos);
+      var b1 = document.createElement("span"); b1.className = "promo-badge"; b1.textContent = "Ofertas";
+      var n1 = document.createElement("span"); n1.className = "promo-name"; n1.textContent = "Muy pronto nuevas promociones";
+      var c1 = document.createElement("span"); c1.className = "promo-cta"; c1.textContent = "Consúltanos por WhatsApp →";
+      empty.appendChild(b1); empty.appendChild(n1); empty.appendChild(c1);
+      promoStrip.appendChild(empty);
+      return;
+    }
+
     var promoEl = function (tag, cls, text) {
       var el = document.createElement(tag);
       if (cls) el.className = cls;
@@ -234,9 +231,8 @@
     };
     var promoPrices = function (p) {
       var wrap = promoEl("span", "promo-prices");
-      if (p.antesLabel) wrap.appendChild(promoEl("span", "promo-old-label", p.antesLabel));
       if (p.antes) wrap.appendChild(promoEl("s", "promo-old", p.antes));
-      wrap.appendChild(promoEl("strong", "promo-new", p.ahora));
+      wrap.appendChild(promoEl("strong", "promo-new", p.ahora || ""));
       if (p.unidad) wrap.appendChild(promoEl("span", "promo-unit", p.unidad));
       if (p.nota) {
         var frag = document.createDocumentFragment();
@@ -247,14 +243,15 @@
       return wrap;
     };
 
-    // Rectángulo grande: siempre la primera oferta de la lista (fija, no rota)
-    var principal = PROMOCIONES[0];
+    // Rectángulo grande: siempre la primera oferta de la lista (ya viene
+    // ordenada por la columna "Orden" del Sheet).
+    var principal = promociones[0];
     var promoMain = promoEl("a", "promo-main");
     promoMain.href = buildWhatsAppLink(principal.mensajeWhatsapp || WHATSAPP_MESSAGES.promos);
     promoMain.target = "_blank";
     promoMain.rel = "noopener";
     var mainMedia = promoEl("span", "promo-media");
-    mainMedia.style.backgroundImage = "url('" + principal.imagen + "')";
+    mainMedia.appendChild(buildPromoImage(principal));
     var mainCopy = promoEl("span", "promo-copy");
     mainCopy.appendChild(promoEl("span", "promo-badge", principal.badge || "Oferta"));
     mainCopy.appendChild(promoEl("span", "promo-name", principal.nombre));
@@ -264,16 +261,16 @@
     promoMain.appendChild(mainCopy);
     promoStrip.appendChild(promoMain);
 
-    // Cuadritos a la derecha: el resto de ofertas de la lista (fijas, no rotan)
-    var promoSide = [];
-    for (var k = 1; k < PROMOCIONES.length; k++) {
-      var p = PROMOCIONES[k];
+    // Cuadritos a la derecha: el resto de ofertas de la lista
+    var sideCount = 0;
+    for (var k = 1; k < promociones.length; k++) {
+      var p = promociones[k];
       var card = promoEl("a", "promo-card");
       card.target = "_blank";
       card.rel = "noopener";
-      card.href = buildWhatsAppLink(p.mensajeWhatsapp || ("Hola MACHES, me interesa la oferta de " + p.nombre + " a " + p.ahora + (p.unidad ? " " + p.unidad : "") + ". ¿Sigue disponible?"));
+      card.href = buildWhatsAppLink(p.mensajeWhatsapp || ("Hola MACHES, me interesa la oferta de " + p.nombre + " a " + (p.ahora || "") + (p.unidad ? " " + p.unidad : "") + ". ¿Sigue disponible?"));
       var cardMedia = promoEl("span", "promo-media");
-      cardMedia.style.backgroundImage = "url('" + p.imagen + "')";
+      cardMedia.appendChild(buildPromoImage(p));
       var cardCopy = promoEl("span", "promo-copy");
       cardCopy.appendChild(promoEl("span", "promo-badge promo-badge-sm", p.badge || "Oferta"));
       cardCopy.appendChild(promoEl("span", "promo-name", p.nombre));
@@ -281,9 +278,9 @@
       card.appendChild(cardMedia);
       card.appendChild(cardCopy);
       promoStrip.appendChild(card);
-      promoSide.push(card);
+      sideCount++;
     }
-    promoStrip.classList.add("has-" + promoSide.length + "-side");
+    promoStrip.classList.add("has-" + sideCount + "-side");
   }
 
   /* ============================================================
@@ -723,6 +720,15 @@
         grid.appendChild(skeleton);
       }
     });
+    if (promoStrip) {
+      promoStrip.innerHTML = "";
+      promoStrip.className = "catalog-promos container";
+      for (var j = 0; j < 3; j++) {
+        var promoSkeleton = document.createElement("div");
+        promoSkeleton.className = "promo-skeleton";
+        promoStrip.appendChild(promoSkeleton);
+      }
+    }
   }
 
   function showCatalogError() {
@@ -764,15 +770,18 @@
     try {
       var raw = window.localStorage.getItem(CATALOG_CACHE_KEY);
       var parsed = raw && JSON.parse(raw);
-      return (parsed && Array.isArray(parsed.items)) ? parsed.items : null;
+      if (!parsed || !Array.isArray(parsed.productos)) return null;
+      return { productos: parsed.productos, promociones: Array.isArray(parsed.promociones) ? parsed.promociones : [] };
     } catch (err) {
       return null; // localStorage no disponible (modo privado, etc.)
     }
   }
 
-  function saveCatalogCache(items) {
+  function saveCatalogCache(data) {
     try {
-      window.localStorage.setItem(CATALOG_CACHE_KEY, JSON.stringify({ items: items, ts: Date.now() }));
+      window.localStorage.setItem(CATALOG_CACHE_KEY, JSON.stringify({
+        productos: data.productos, promociones: data.promociones, ts: Date.now()
+      }));
     } catch (err) { /* sin cache, no pasa nada grave */ }
   }
 
@@ -780,10 +789,11 @@
     document.body.classList.add("prices-ready");
   };
 
-  if (Object.keys(catalogGrids).length) {
+  if (Object.keys(catalogGrids).length || promoStrip) {
     var cachedCatalog = loadCatalogCache();
-    if (cachedCatalog && cachedCatalog.length) {
-      renderCatalog(cachedCatalog);
+    if (cachedCatalog) {
+      renderCatalog(cachedCatalog.productos);
+      renderPromoStrip(cachedCatalog.promociones);
       revealCatalog();
     } else {
       showCatalogSkeletons();
@@ -792,14 +802,18 @@
     if (window.fetch) {
       fetch(CATALOG_API)
         .then(function (res) { return res.json(); })
-        .then(function (items) {
-          renderCatalog(items);
-          saveCatalogCache(items);
+        .then(function (data) {
+          renderCatalog(data.productos || []);
+          renderPromoStrip(data.promociones || []);
+          saveCatalogCache(data);
           revealCatalog();
         })
         .catch(function (err) {
           console.warn("No se pudo cargar el catálogo en vivo:", err);
-          if (!cachedCatalog) showCatalogError();
+          if (!cachedCatalog) {
+            showCatalogError();
+            renderPromoStrip([]);
+          }
           revealCatalog();
         });
     } else {
