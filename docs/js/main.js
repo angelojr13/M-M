@@ -34,10 +34,10 @@
   // Mientras la lista esté vacía se muestra un recuadro de "Ofertas – Muy pronto".
   var PROMOCIONES = [
     {
-      nombre: "Jueves 29/10 sorteamos un Pack Chicharronero",
+      nombre: "Miércoles 23/12 sorteamos un Pack Chicharronero",
       ahora: "¡Compra y participa!",
       nota: "¡Por cada compra reclama tu ticket! Pack Chicharronero (valorizado en S/ 89.90): incluye 1.5 kg de panceta + 1 kg de chuleta + 1 kg de brazuelo trozado + 250 g de manteca.",
-      badge: "Sorteo Criollazo",
+      badge: "Sorteo Navideño",
       imagen: "assets/pack-chicharronero.jpg",
       mensajeWhatsapp: "Hola MACHES, quiero comprar para participar en el sorteo y ganar el Pack Chicharronero. ¿Cómo participo?"
     },
@@ -65,6 +65,20 @@
   document.querySelectorAll("[data-whatsapp-product]").forEach(function (el) {
     var product = el.getAttribute("data-whatsapp-product");
     el.setAttribute("href", buildWhatsAppLink("Hola MACHES, me interesa cotizar y saber disponibilidad de: " + product + ". ¿Me brindan más detalles por favor?"));
+  });
+
+  // Mide en Google Analytics (GA4) cada clic en un botón de WhatsApp,
+  // sea el CTA fijo del header/hero/footer o un botón de producto/promo
+  // (incluye los que se generan dinámicamente, como las tarjetas de
+  // ofertas y productos).
+  document.addEventListener("click", function (e) {
+    if (typeof window.gtag !== "function" || !e.target.closest) return;
+    var link = e.target.closest("[data-whatsapp-cta], [data-whatsapp-product]");
+    if (!link) return;
+    window.gtag("event", "whatsapp_click", {
+      cta_location: link.getAttribute("data-whatsapp-cta") || "producto",
+      product_name: link.getAttribute("data-whatsapp-product") || undefined
+    });
   });
 
   /* ============================================================
@@ -263,10 +277,18 @@
   var searchForm = document.getElementById("headerSearchForm");
   var searchInput = document.getElementById("productSearch");
   var searchResults = document.getElementById("searchResults");
-  var productCards = Array.prototype.slice.call(document.querySelectorAll(".product-card[data-name]"));
+  var catalogRoot = document.querySelector(".catalog-categories");
+
+  // Las tarjetas ahora las genera el catálogo dinámico (ver más abajo) después
+  // de consultar la API, así que no podemos guardarlas en un array fijo acá
+  // arriba: todavía no existen en el momento en que corre este script.
+  // Por eso se consultan de nuevo cada vez que hacen falta.
+  function getProductCards() {
+    return Array.prototype.slice.call(document.querySelectorAll(".product-card[data-name]"));
+  }
 
   function clearHighlights() {
-    productCards.forEach(function (card) { card.classList.remove("is-highlighted"); });
+    getProductCards().forEach(function (card) { card.classList.remove("is-highlighted"); });
   }
 
   function highlightProduct(card) {
@@ -282,7 +304,7 @@
     if (!searchResults) return;
     searchResults.innerHTML = "";
     if (!query) { searchResults.hidden = true; return; }
-    var matches = productCards.filter(function (card) {
+    var matches = getProductCards().filter(function (card) {
       return card.getAttribute("data-name").toLowerCase().indexOf(query) !== -1;
     });
     if (!matches.length) {
@@ -307,7 +329,7 @@
   }
 
   if (searchForm && searchInput) {
-    if (productCards.length) {
+    if (catalogRoot) {
       // En index.html: filtra en vivo, sin recargar la página
       searchForm.addEventListener("submit", function (e) { e.preventDefault(); });
       searchInput.addEventListener("input", function () {
@@ -531,60 +553,231 @@
   }
 
   /* ============================================================
-     Precios en vivo desde Google Sheets
+     Catálogo en vivo desde Google Sheets
      Fuente: Catalogo_Propuesta_MACHES (vía Apps Script, solo lectura).
-     Cambia "Precio propuesto (S/)" o "Publicar en landing" en el Sheet
-     y se refleja aquí al recargar la página.
+     El HTML NO tiene tarjetas escritas a mano: todas se arman acá a partir
+     de lo que devuelve la API, así que un producto nuevo en el Sheet (con
+     "Publicar en landing" = Sí) aparece solo, sin tocar código.
+     Cambia "Precio propuesto (S/)", "Publicar en landing", "Qué incluye"
+     (solo hoja Packs) o "Uso recomendado" en el Sheet y se refleja aquí
+     al recargar la página.
+     Columna "Imagen": pega un link de Google Drive para que la foto
+     se cargue desde ahí (el archivo debe estar compartido como
+     "Cualquiera con el enlace - Lector"); el Apps Script lo convierte
+     solo a la URL directa. También acepta el nombre de un archivo que
+     ya exista en landing/assets/.
+     Columna "categoria" (la pone la API, no el Sheet): dice en qué
+     contenedor "cat-<categoria>" va cada producto.
+
+     Para que no se note la carga (nada de "flash" con datos viejos): la
+     primera vez que llega el catálogo se guarda en localStorage, y en
+     las siguientes visitas se pinta ESE catálogo de inmediato (antes de
+     llamar a la API) mientras se revisa en segundo plano si cambió algo.
      ============================================================ */
-  var LIVE_PRICES_API =
+  var CATALOG_API =
     "https://script.google.com/macros/s/AKfycbyE8ayGaWK9XD9i-8yy3vMA5jCRaresObRdfzaAXE5tzmcLjlc3FKgXjDP0TXeCXkbyIA/exec";
+  var CATALOG_CACHE_KEY = "maches_catalog_v1";
 
-  function applyLivePrices(items) {
-    items.forEach(function (item) {
-      var card = document.querySelector('.product-card[data-id="' + item.id + '"]');
-      if (!card) return;
+  // Mapa "categoria" -> <div class="catalog-grid"> donde van sus tarjetas,
+  // armado una sola vez a partir de los contenedores "cat-<categoria>" que
+  // ya existen en el HTML (esos sí son fijos; solo su contenido es dinámico).
+  var catalogGrids = {};
+  Array.prototype.slice.call(document.querySelectorAll(".catalog-category[id^='cat-']")).forEach(function (block) {
+    var grid = block.querySelector(".catalog-grid");
+    if (grid) catalogGrids[block.id.slice(4)] = grid;
+  });
 
-      if (!item.publicar) {
-        card.style.display = "none";
-        return;
-      }
-      card.style.display = "";
+  // Reconstruye un <p><strong>Etiqueta:</strong> texto</p> sin usar innerHTML,
+  // porque "texto" viene del Sheet (lo puede editar cualquiera con acceso).
+  function buildLabeledParagraph(cls, label, text) {
+    var p = document.createElement("p");
+    p.className = cls;
+    var strong = document.createElement("strong");
+    strong.textContent = label;
+    p.appendChild(strong);
+    p.appendChild(document.createTextNode(" " + text));
+    return p;
+  }
 
-      if (item.nombre) {
-        var nameEl = card.querySelector(".product-name");
-        if (nameEl) nameEl.textContent = item.nombre;
-        card.setAttribute("data-name", item.nombre);
-        var cta = card.querySelector(".product-cta");
-        if (cta) cta.setAttribute("data-whatsapp-product", item.nombre);
-      }
+  function buildProductImage(item) {
+    if (item.imagen && /^https:\/\//i.test(item.imagen)) {
+      var wrap = document.createElement("div");
+      wrap.className = "product-img";
+      var img = document.createElement("img");
+      img.loading = "lazy";
+      img.width = 500;
+      img.height = 500;
+      img.alt = item.nombre + " MACHES";
+      // URL de Drive ya convertida por el Apps Script. Sin "no-referrer"
+      // Google la rechaza (manda un Referer que no le gusta).
+      img.referrerPolicy = "no-referrer";
+      img.src = item.imagen;
+      wrap.appendChild(img);
+      return wrap;
+    }
+    if (item.imagen && /^[\w.-]+\.(jpg|jpeg|png|webp)$/i.test(item.imagen)) {
+      var wrap2 = document.createElement("div");
+      wrap2.className = "product-img";
+      var img2 = document.createElement("img");
+      img2.loading = "lazy";
+      img2.width = 500;
+      img2.height = 500;
+      img2.alt = item.nombre + " MACHES";
+      img2.src = "assets/" + item.imagen; // nombre de archivo dentro de /assets
+      wrap2.appendChild(img2);
+      return wrap2;
+    }
+    // Sin foto todavía (p. ej. un producto recién agregado al Sheet):
+    // recuadro placeholder en vez de una imagen rota.
+    var placeholder = document.createElement("div");
+    placeholder.className = "product-img-placeholder";
+    var span = document.createElement("span");
+    span.textContent = "Foto próximamente";
+    placeholder.appendChild(span);
+    return placeholder;
+  }
 
-      if (typeof item.precio === "number" && item.precio > 0) {
-        var valueEl = card.querySelector(".product-price-value");
-        if (valueEl) {
-          valueEl.textContent = valueEl.textContent.replace(
-            /S\/\s*[\d.,]+/,
-            "S/ " + item.precio.toFixed(2)
-          );
-        }
+  function buildProductCard(item) {
+    var art = document.createElement("article");
+    art.className = "product-card";
+    art.setAttribute("data-id", item.id);
+    art.setAttribute("data-name", item.nombre);
+    art.appendChild(buildProductImage(item));
+
+    var h4 = document.createElement("h4");
+    h4.className = "product-name";
+    h4.textContent = item.nombre;
+    art.appendChild(h4);
+
+    var priceP = document.createElement("p");
+    priceP.className = "product-price";
+    var labelSpan = document.createElement("span");
+    labelSpan.className = "product-price-label";
+    labelSpan.textContent = "Precio referencial:";
+    var valueSpan = document.createElement("span");
+    valueSpan.className = "product-price-value";
+    valueSpan.textContent = (typeof item.precio === "number" && item.precio > 0)
+      ? "S/ " + item.precio.toFixed(2)
+      : "Según tu selección";
+    priceP.appendChild(labelSpan);
+    priceP.appendChild(document.createTextNode(" "));
+    priceP.appendChild(valueSpan);
+    art.appendChild(priceP);
+
+    var saleNote = document.createElement("p");
+    saleNote.className = "product-sale-note";
+    saleNote.textContent = "Cotización según Volumen";
+    art.appendChild(saleNote);
+
+    if (item.incluye) art.appendChild(buildLabeledParagraph("product-includes", "Incluye:", item.incluye));
+    if (item.usos) art.appendChild(buildLabeledParagraph("product-uses", "Usos recomendados:", item.usos));
+
+    var cta = document.createElement("a");
+    cta.className = "btn btn-primary product-cta";
+    cta.target = "_blank";
+    cta.rel = "noopener";
+    cta.textContent = "Cotizar";
+    cta.setAttribute("data-whatsapp-product", item.nombre);
+    cta.href = buildWhatsAppLink("Hola MACHES, me interesa cotizar y saber disponibilidad de: " + item.nombre + ". ¿Me brindan más detalles por favor?");
+    art.appendChild(cta);
+
+    return art;
+  }
+
+  function forEachGrid(fn) {
+    Object.keys(catalogGrids).forEach(function (key) { fn(catalogGrids[key], key); });
+  }
+
+  function showCatalogSkeletons() {
+    forEachGrid(function (grid) {
+      grid.innerHTML = "";
+      for (var i = 0; i < 4; i++) {
+        var skeleton = document.createElement("div");
+        skeleton.className = "product-card-skeleton";
+        grid.appendChild(skeleton);
       }
     });
   }
 
-  var revealPrices = function () {
+  function showCatalogError() {
+    forEachGrid(function (grid) {
+      grid.innerHTML = "";
+      var p = document.createElement("p");
+      p.className = "catalog-error";
+      p.appendChild(document.createTextNode("No pudimos cargar el catálogo. "));
+      var a = document.createElement("a");
+      a.href = buildWhatsAppLink(WHATSAPP_MESSAGES.pedido);
+      a.target = "_blank";
+      a.rel = "noopener";
+      a.textContent = "Escríbenos por WhatsApp";
+      p.appendChild(a);
+      grid.appendChild(p);
+    });
+  }
+
+  function renderCatalog(items) {
+    var byCategory = {};
+    items.forEach(function (item) {
+      if (!item.publicar || !item.categoria) return;
+      (byCategory[item.categoria] || (byCategory[item.categoria] = [])).push(item);
+    });
+    forEachGrid(function (grid, key) {
+      grid.innerHTML = "";
+      var list = byCategory[key] || [];
+      list.forEach(function (item) { grid.appendChild(buildProductCard(item)); });
+      if (!list.length) {
+        var p = document.createElement("p");
+        p.className = "catalog-empty";
+        p.textContent = "Muy pronto nuevos productos en esta categoría.";
+        grid.appendChild(p);
+      }
+    });
+  }
+
+  function loadCatalogCache() {
+    try {
+      var raw = window.localStorage.getItem(CATALOG_CACHE_KEY);
+      var parsed = raw && JSON.parse(raw);
+      return (parsed && Array.isArray(parsed.items)) ? parsed.items : null;
+    } catch (err) {
+      return null; // localStorage no disponible (modo privado, etc.)
+    }
+  }
+
+  function saveCatalogCache(items) {
+    try {
+      window.localStorage.setItem(CATALOG_CACHE_KEY, JSON.stringify({ items: items, ts: Date.now() }));
+    } catch (err) { /* sin cache, no pasa nada grave */ }
+  }
+
+  var revealCatalog = function () {
     document.body.classList.add("prices-ready");
   };
 
-  if (window.fetch) {
-    fetch(LIVE_PRICES_API)
-      .then(function (res) {
-        return res.json();
-      })
-      .then(applyLivePrices)
-      .catch(function (err) {
-        console.warn("No se pudieron cargar los precios en vivo:", err);
-      })
-      .then(revealPrices, revealPrices);
-  } else {
-    revealPrices();
+  if (Object.keys(catalogGrids).length) {
+    var cachedCatalog = loadCatalogCache();
+    if (cachedCatalog && cachedCatalog.length) {
+      renderCatalog(cachedCatalog);
+      revealCatalog();
+    } else {
+      showCatalogSkeletons();
+    }
+
+    if (window.fetch) {
+      fetch(CATALOG_API)
+        .then(function (res) { return res.json(); })
+        .then(function (items) {
+          renderCatalog(items);
+          saveCatalogCache(items);
+          revealCatalog();
+        })
+        .catch(function (err) {
+          console.warn("No se pudo cargar el catálogo en vivo:", err);
+          if (!cachedCatalog) showCatalogError();
+          revealCatalog();
+        });
+    } else {
+      revealCatalog();
+    }
   }
 })();

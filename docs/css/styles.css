@@ -875,12 +875,6 @@ button { font-family: inherit; cursor: pointer; }
   letter-spacing: 0.04em;
   color: rgba(10, 8, 8, 0.55);
 }
-.product-price-value {
-  visibility: hidden;
-}
-body.prices-ready .product-price-value {
-  visibility: visible;
-}
 .product-sale-note {
   display: block;
   font-size: 0.7rem;
@@ -894,6 +888,33 @@ body.prices-ready .product-price-value {
 .product-includes { font-size: 0.82rem; color: rgba(10, 8, 8, 0.65); margin-bottom: var(--space-1); text-align: left; }
 .product-includes strong { color: var(--color-black); }
 .product-cta { margin-top: auto; text-align: center; font-size: 0.82rem; padding: 0.6rem 1rem; }
+
+/* Catálogo generado por JS desde la API (ver js/main.js): esqueleto de carga
+   mientras llega el primer dato, y estados de error/vacío. */
+.product-card-skeleton {
+  aspect-ratio: 3 / 4;
+  border: 1px solid rgba(10, 8, 8, 0.08);
+  border-radius: var(--radius-md);
+  background: linear-gradient(100deg, rgba(10, 8, 8, 0.04) 30%, rgba(10, 8, 8, 0.09) 50%, rgba(10, 8, 8, 0.04) 70%);
+  background-size: 200% 100%;
+  animation: catalog-skeleton-pulse 1.4s ease-in-out infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .product-card-skeleton { animation: none; }
+}
+@keyframes catalog-skeleton-pulse {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+.catalog-grid .catalog-empty,
+.catalog-grid .catalog-error {
+  grid-column: 1 / -1;
+  font-size: 0.88rem;
+  color: rgba(10, 8, 8, 0.6);
+  text-align: center;
+  padding: var(--space-4) var(--space-2);
+}
+.catalog-grid .catalog-error a { color: var(--color-guinda); font-weight: 600; }
 
 /* ==========================================================================
    Tipos de Carnes (en desuso, se mantiene por compatibilidad de estilos)
