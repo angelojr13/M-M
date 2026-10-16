@@ -56,6 +56,13 @@
     return "https://wa.me/" + WHATSAPP_NUMBER + "?text=" + encodeURIComponent(message);
   }
 
+  // Manda un evento a Google Analytics (GA4) si gtag ya está cargado.
+  // Sin GA4 conectado (ID real en vez del de prueba) esto no hace nada,
+  // pero el código queda listo para cuando se conecte.
+  function trackEvent(name, params) {
+    if (typeof window.gtag === "function") window.gtag("event", name, params);
+  }
+
   document.querySelectorAll("[data-whatsapp-cta]").forEach(function (el) {
     var key = el.getAttribute("data-whatsapp-cta");
     var message = WHATSAPP_MESSAGES[key] || WHATSAPP_MESSAGES.header;
@@ -70,14 +77,17 @@
   // Mide en Google Analytics (GA4) cada clic en un botón de WhatsApp,
   // sea el CTA fijo del header/hero/footer o un botón de producto/promo
   // (incluye los que se generan dinámicamente, como las tarjetas de
-  // ofertas y productos).
+  // ofertas y productos). "product_category" permite ver el interés por
+  // línea de negocio (Packs, Porcino, Res, Cordero, Cabrito, Derivados),
+  // no solo por producto suelto.
   document.addEventListener("click", function (e) {
-    if (typeof window.gtag !== "function" || !e.target.closest) return;
+    if (!e.target.closest) return;
     var link = e.target.closest("[data-whatsapp-cta], [data-whatsapp-product]");
     if (!link) return;
-    window.gtag("event", "whatsapp_click", {
+    trackEvent("whatsapp_click", {
       cta_location: link.getAttribute("data-whatsapp-cta") || "producto",
-      product_name: link.getAttribute("data-whatsapp-product") || undefined
+      product_name: link.getAttribute("data-whatsapp-product") || undefined,
+      product_category: link.getAttribute("data-whatsapp-category") || undefined
     });
   });
 
@@ -179,6 +189,9 @@
         closeCategories();
       } else {
         openCategory(targetId);
+        // Embudo: cuántos ABREN una categoría (ven productos) vs cuántos de
+        // esos terminan en "whatsapp_click" con esa misma product_category.
+        trackEvent("ver_categoria", { categoria: targetId.replace(/^cat-/, "") });
         var target = document.getElementById(targetId);
         if (target) target.scrollIntoView({ behavior: "smooth", block: "start" });
       }
@@ -194,7 +207,9 @@
   // Enlaces del menú "Productos" del header: tambien deben abrir la categoría
   document.querySelectorAll('#productsMenu a[href^="#cat-"]').forEach(function (link) {
     link.addEventListener("click", function () {
-      openCategory(link.getAttribute("href").slice(1));
+      var targetId = link.getAttribute("href").slice(1);
+      openCategory(targetId);
+      trackEvent("ver_categoria", { categoria: targetId.replace(/^cat-/, "") });
     });
   });
 
@@ -332,8 +347,18 @@
     if (catalogRoot) {
       // En index.html: filtra en vivo, sin recargar la página
       searchForm.addEventListener("submit", function (e) { e.preventDefault(); });
+      var searchTrackTimer = null;
       searchInput.addEventListener("input", function () {
-        renderSearchResults(searchInput.value.trim().toLowerCase());
+        var query = searchInput.value.trim().toLowerCase();
+        renderSearchResults(query);
+        // Qué busca la gente (con un respiro para no mandar un evento por
+        // cada letra mientras escriben).
+        window.clearTimeout(searchTrackTimer);
+        if (query.length >= 2) {
+          searchTrackTimer = window.setTimeout(function () {
+            trackEvent("buscar_producto", { termino: query });
+          }, 600);
+        }
       });
       document.addEventListener("click", function (e) {
         if (searchResults && !searchForm.contains(e.target)) searchResults.hidden = true;
@@ -678,6 +703,7 @@
     cta.rel = "noopener";
     cta.textContent = "Cotizar";
     cta.setAttribute("data-whatsapp-product", item.nombre);
+    cta.setAttribute("data-whatsapp-category", item.categoria);
     cta.href = buildWhatsAppLink("Hola MACHES, me interesa cotizar y saber disponibilidad de: " + item.nombre + ". ¿Me brindan más detalles por favor?");
     art.appendChild(cta);
 
