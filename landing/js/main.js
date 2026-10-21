@@ -691,7 +691,7 @@
     saleNote.textContent = "Cotización según Volumen";
     art.appendChild(saleNote);
 
-    if (item.incluye) art.appendChild(buildLabeledParagraph("product-includes", "Incluye:", item.incluye));
+    if (item.incluye) art.appendChild(buildLabeledParagraph("product-includes", "Detalle:", item.incluye));
     if (item.usos) art.appendChild(buildLabeledParagraph("product-uses", "Usos recomendados:", item.usos));
 
     var cta = document.createElement("a");
@@ -701,7 +701,7 @@
     cta.textContent = "Cotizar";
     cta.setAttribute("data-whatsapp-product", item.nombre);
     cta.setAttribute("data-whatsapp-category", item.categoria);
-    cta.href = buildWhatsAppLink("Hola MACHES, me interesa cotizar y saber disponibilidad de: " + item.nombre + ". ¿Me brindan más detalles por favor?");
+    cta.href = buildWhatsAppLink(item.mensajeWhatsapp || ("Hola MACHES, me interesa cotizar y saber disponibilidad de: " + item.nombre + ". ¿Me brindan más detalles por favor?"));
     art.appendChild(cta);
 
     return art;
