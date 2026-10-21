@@ -525,11 +525,12 @@
     if (timer) { window.clearInterval(timer); timer = null; }
   }
 
-  function buildHeroImage(src, posicion) {
+  function buildHeroImage(src, posicion, priority) {
     var img = document.createElement("img");
     img.className = "hero-slide-img";
     img.alt = "";
     if (posicion) img.style.objectPosition = posicion;
+    if (priority) img.fetchPriority = "high"; // el slide activo no debe esperar cola de descarga
     if (src && /^https:\/\//i.test(src)) {
       img.referrerPolicy = "no-referrer"; // Drive rechaza la imagen sin esto
       img.src = src;
@@ -572,7 +573,7 @@
       art.setAttribute("aria-label", (i + 1) + " de " + list.length);
       art.setAttribute("data-cta-label", item.boton || "Haz tu Pedido");
       art.setAttribute("data-cta-message", item.mensajeWhatsapp || WHATSAPP_MESSAGES.pedido);
-      if (item.imagen) art.appendChild(buildHeroImage(item.imagen, item.posicion));
+      if (item.imagen) art.appendChild(buildHeroImage(item.imagen, item.posicion, i === 0));
 
       var content = document.createElement("div");
       content.className = "hero-content container";
