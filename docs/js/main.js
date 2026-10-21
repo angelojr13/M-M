@@ -475,83 +475,171 @@
 
 
   /* ============================================================
-     Hero slider
+     Hero slider (hoja "Hero" del Sheet)
      ============================================================ */
-  var slides = Array.prototype.slice.call(document.querySelectorAll(".hero-slide"));
-  var dots = Array.prototype.slice.call(document.querySelectorAll(".hero-dot"));
+  var slides = [];
+  var dots = [];
   var heroSection = document.querySelector(".hero");
+  var heroTrack = document.getElementById("heroTrack");
+  var heroDots = document.getElementById("heroDots");
   var heroCta = document.getElementById("heroCta");
   var current = 0;
   var AUTOPLAY_MS = 6000;
   var timer = null;
 
+  // Respaldo por si el Sheet no devuelve ninguna fila publicada, para que
+  // el banner nunca se vea vacío.
+  var HERO_FALLBACK = [{
+    titulo: "MACHES — Carnes Selectas y Ganadería Sostenible",
+    boton: "Haz tu Pedido",
+    mensajeWhatsapp: WHATSAPP_MESSAGES.pedido
+  }];
+
   function applyHeroCta(slide) {
-    if (!heroCta) return;
-    var label = slide.getAttribute("data-cta-label") || "[ Haz tu Pedido ]";
-    var key = slide.getAttribute("data-cta-key") || "pedido";
-    var style = slide.getAttribute("data-cta-style") || "fucsia";
-    heroCta.textContent = label;
-    heroCta.setAttribute("data-whatsapp-cta", key);
-    heroCta.setAttribute("href", buildWhatsAppLink(WHATSAPP_MESSAGES[key] || WHATSAPP_MESSAGES.pedido));
-    heroCta.classList.toggle("btn-fucsia", style === "fucsia");
-    heroCta.classList.toggle("btn-primary", style !== "fucsia");
+    if (!heroCta || !slide) return;
+    heroCta.textContent = slide.getAttribute("data-cta-label") || "Haz tu Pedido";
+    heroCta.setAttribute("data-whatsapp-cta", "hero");
+    heroCta.setAttribute("href", buildWhatsAppLink(slide.getAttribute("data-cta-message") || WHATSAPP_MESSAGES.pedido));
   }
 
   function goTo(index) {
+    if (!slides.length) return;
     slides[current].classList.remove("is-active");
-    dots[current].classList.remove("is-active");
-    dots[current].setAttribute("aria-selected", "false");
+    if (dots.length) { dots[current].classList.remove("is-active"); dots[current].setAttribute("aria-selected", "false"); }
 
     current = (index + slides.length) % slides.length;
 
     slides[current].classList.add("is-active");
-    dots[current].classList.add("is-active");
-    dots[current].setAttribute("aria-selected", "true");
+    if (dots.length) { dots[current].classList.add("is-active"); dots[current].setAttribute("aria-selected", "true"); }
     applyHeroCta(slides[current]);
   }
 
   function next() { goTo(current + 1); }
   function prev() { goTo(current - 1); }
 
-  if (slides.length) applyHeroCta(slides[0]);
-
   function startAutoplay() {
     stopAutoplay();
-    timer = window.setInterval(next, AUTOPLAY_MS);
+    if (slides.length > 1) timer = window.setInterval(next, AUTOPLAY_MS);
   }
   function stopAutoplay() {
     if (timer) { window.clearInterval(timer); timer = null; }
   }
 
-  if (slides.length > 1) {
-    dots.forEach(function (dot, i) {
-      dot.addEventListener("click", function () { goTo(i); startAutoplay(); });
+  function buildHeroImage(src) {
+    var img = document.createElement("img");
+    img.className = "hero-slide-img";
+    img.alt = "";
+    if (src && /^https:\/\//i.test(src)) {
+      img.referrerPolicy = "no-referrer"; // Drive rechaza la imagen sin esto
+      img.src = src;
+    } else if (src) {
+      img.src = "assets/" + src;
+    }
+    return img;
+  }
+
+  // Convierte **texto** en <strong> (resaltado en rojo), sin usar innerHTML
+  function buildHeroTitle(text) {
+    var h2 = document.createElement("h2");
+    h2.className = "hero-title";
+    String(text || "").split(/\*\*(.+?)\*\*/g).forEach(function (part, i) {
+      if (!part) return;
+      if (i % 2 === 1) {
+        var strong = document.createElement("strong");
+        strong.textContent = part;
+        h2.appendChild(strong);
+      } else {
+        h2.appendChild(document.createTextNode(part));
+      }
+    });
+    return h2;
+  }
+
+  function renderHero(items) {
+    if (!heroTrack) return;
+    stopAutoplay();
+    heroTrack.innerHTML = "";
+    if (heroDots) heroDots.innerHTML = "";
+
+    var list = (items && items.length) ? items : HERO_FALLBACK;
+
+    list.forEach(function (item, i) {
+      var art = document.createElement("article");
+      art.className = "hero-slide" + (i === 0 ? " is-active" : "");
+      art.setAttribute("role", "group");
+      art.setAttribute("aria-roledescription", "diapositiva");
+      art.setAttribute("aria-label", (i + 1) + " de " + list.length);
+      art.setAttribute("data-cta-label", item.boton || "Haz tu Pedido");
+      art.setAttribute("data-cta-message", item.mensajeWhatsapp || WHATSAPP_MESSAGES.pedido);
+      if (item.imagen) art.appendChild(buildHeroImage(item.imagen));
+
+      var content = document.createElement("div");
+      content.className = "hero-content container";
+      if (item.badge) {
+        var badge = document.createElement("p");
+        badge.className = "hero-badge";
+        badge.textContent = item.badge;
+        content.appendChild(badge);
+      } else if (item.eyebrow) {
+        var eyebrow = document.createElement("p");
+        eyebrow.className = "hero-eyebrow";
+        eyebrow.textContent = item.eyebrow;
+        content.appendChild(eyebrow);
+      }
+      content.appendChild(buildHeroTitle(item.titulo));
+      if (item.subtitulo) {
+        var sub = document.createElement("p");
+        sub.className = "hero-subtitle";
+        sub.textContent = item.subtitulo;
+        content.appendChild(sub);
+      }
+      art.appendChild(content);
+      heroTrack.appendChild(art);
+
+      if (heroDots) {
+        var dot = document.createElement("button");
+        dot.className = "hero-dot" + (i === 0 ? " is-active" : "");
+        dot.type = "button";
+        dot.setAttribute("role", "tab");
+        dot.setAttribute("aria-selected", i === 0 ? "true" : "false");
+        dot.setAttribute("aria-label", "Ir a diapositiva " + (i + 1));
+        dot.addEventListener("click", function () { goTo(i); startAutoplay(); });
+        heroDots.appendChild(dot);
+      }
     });
 
+    slides = Array.prototype.slice.call(heroTrack.querySelectorAll(".hero-slide"));
+    dots = heroDots ? Array.prototype.slice.call(heroDots.querySelectorAll(".hero-dot")) : [];
+    current = 0;
+    applyHeroCta(slides[0]);
+
+    var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (!reduceMotion) startAutoplay();
+  }
+
+  // Interacciones del carrusel: se enganchan una sola vez a la sección (no
+  // a los slides, que se regeneran cada vez que llega data nueva del Sheet).
+  if (heroSection) {
     heroSection.addEventListener("mouseenter", stopAutoplay);
     heroSection.addEventListener("mouseleave", startAutoplay);
 
-    // Touch swipe
     var touchStartX = 0;
     heroSection.addEventListener("touchstart", function (e) {
       touchStartX = e.changedTouches[0].screenX;
     }, { passive: true });
     heroSection.addEventListener("touchend", function (e) {
       var delta = e.changedTouches[0].screenX - touchStartX;
-      if (Math.abs(delta) > 40) {
+      if (Math.abs(delta) > 40 && slides.length > 1) {
         delta < 0 ? next() : prev();
         startAutoplay();
       }
     }, { passive: true });
 
-    // Keyboard
     heroSection.addEventListener("keydown", function (e) {
+      if (slides.length < 2) return;
       if (e.key === "ArrowRight") { next(); startAutoplay(); }
       if (e.key === "ArrowLeft") { prev(); startAutoplay(); }
     });
-
-    var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (!reduceMotion) startAutoplay();
   }
 
   /* ============================================================
@@ -881,7 +969,8 @@
       return {
         productos: parsed.productos,
         promociones: Array.isArray(parsed.promociones) ? parsed.promociones : [],
-        lineasNegocio: Array.isArray(parsed.lineasNegocio) ? parsed.lineasNegocio : []
+        lineasNegocio: Array.isArray(parsed.lineasNegocio) ? parsed.lineasNegocio : [],
+        hero: Array.isArray(parsed.hero) ? parsed.hero : []
       };
     } catch (err) {
       return null; // localStorage no disponible (modo privado, etc.)
@@ -891,7 +980,7 @@
   function saveCatalogCache(data) {
     try {
       window.localStorage.setItem(CATALOG_CACHE_KEY, JSON.stringify({
-        productos: data.productos, promociones: data.promociones, lineasNegocio: data.lineasNegocio, ts: Date.now()
+        productos: data.productos, promociones: data.promociones, lineasNegocio: data.lineasNegocio, hero: data.hero, ts: Date.now()
       }));
     } catch (err) { /* sin cache, no pasa nada grave */ }
   }
@@ -900,12 +989,17 @@
     document.body.classList.add("prices-ready");
   };
 
-  if (Object.keys(catalogGrids).length || promoStrip || unitsSection) {
+  // El hero se muestra con el respaldo de inmediato (nunca vacío) y se
+  // reemplaza solo cuando llega la data real del Sheet.
+  renderHero(null);
+
+  if (Object.keys(catalogGrids).length || promoStrip || unitsSection || heroTrack) {
     var cachedCatalog = loadCatalogCache();
     if (cachedCatalog) {
       renderCatalog(cachedCatalog.productos);
       renderPromoStrip(cachedCatalog.promociones);
       renderUnitsSection(cachedCatalog.lineasNegocio);
+      renderHero(cachedCatalog.hero);
       revealCatalog();
     } else {
       showCatalogSkeletons();
@@ -918,6 +1012,7 @@
           renderCatalog(data.productos || []);
           renderPromoStrip(data.promociones || []);
           renderUnitsSection(data.lineasNegocio || []);
+          renderHero(data.hero || []);
           saveCatalogCache(data);
           revealCatalog();
         })
