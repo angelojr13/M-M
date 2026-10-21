@@ -284,6 +284,126 @@
   }
 
   /* ============================================================
+     Lineas de Negocio (hoja "LineasNegocio" del Sheet)
+     ============================================================ */
+  var unitsSection = document.getElementById("unitsSection");
+  var unitsMenu = document.getElementById("unitsMenu");
+
+  function slugify(text) {
+    return String(text || "")
+      .normalize("NFD").replace(/[̀-ͯ]/g, "")
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/^-+|-+$/g, "") || "unidad";
+  }
+
+  function buildUnitImage(src, alt) {
+    var img = document.createElement("img");
+    img.alt = alt || "";
+    img.loading = "lazy";
+    if (/^https:\/\//i.test(src)) {
+      img.referrerPolicy = "no-referrer"; // Drive rechaza la imagen sin esto
+      img.src = src;
+    } else {
+      img.src = "assets/" + src;
+    }
+    return img;
+  }
+
+  function buildUnitBlock(item, index) {
+    var slug = slugify(item.titulo);
+    var art = document.createElement("article");
+    art.id = slug;
+    art.className = "unit-block reveal" + (index % 2 === 1 ? " unit-block-alt" : "");
+
+    var grid = document.createElement("div");
+    grid.className = "container unit-grid";
+
+    var visual = document.createElement("div");
+    visual.className = "unit-visual";
+    var imagenes = (item.imagenes || []).filter(Boolean);
+    if (imagenes.length > 1) {
+      visual.classList.add("unit-slideshow");
+      imagenes.forEach(function (src, i) {
+        var img = buildUnitImage(src, item.titulo);
+        img.className = "unit-slide" + (i === 0 ? " is-active" : "");
+        visual.appendChild(img);
+      });
+    } else if (imagenes.length === 1) {
+      visual.appendChild(buildUnitImage(imagenes[0], item.titulo));
+    }
+
+    var copy = document.createElement("div");
+    copy.className = "unit-copy";
+
+    var kicker = document.createElement("p");
+    kicker.className = "unit-kicker";
+    var num = index + 1;
+    kicker.textContent = "Unidad " + (num < 10 ? "0" + num : num);
+    copy.appendChild(kicker);
+
+    var h3 = document.createElement("h3");
+    h3.className = "unit-title";
+    var strong = document.createElement("strong");
+    strong.className = "text-guinda";
+    strong.textContent = item.marca || "";
+    h3.appendChild(strong);
+    if (item.titulo) {
+      h3.appendChild(document.createTextNode(" "));
+      var sep = document.createElement("span");
+      sep.className = "unit-title-sep";
+      sep.textContent = "|";
+      h3.appendChild(sep);
+      h3.appendChild(document.createTextNode(" " + item.titulo));
+    }
+    copy.appendChild(h3);
+
+    if (item.texto) {
+      var p = document.createElement("p");
+      p.className = "unit-text";
+      p.textContent = item.texto;
+      copy.appendChild(p);
+    }
+
+    if (item.boton) {
+      var cta = document.createElement("a");
+      cta.className = "btn btn-primary";
+      cta.target = "_blank";
+      cta.rel = "noopener";
+      cta.textContent = item.boton;
+      cta.setAttribute("data-whatsapp-cta", "unidad-" + slug);
+      cta.href = buildWhatsAppLink(item.mensajeWhatsapp || WHATSAPP_MESSAGES.pedido);
+      copy.appendChild(cta);
+    }
+
+    grid.appendChild(visual);
+    grid.appendChild(copy);
+    art.appendChild(grid);
+    return art;
+  }
+
+  function renderUnitsSection(lineas) {
+    if (!unitsSection) return;
+    unitsSection.innerHTML = "";
+    if (unitsMenu) unitsMenu.innerHTML = "";
+    if (!lineas || !lineas.length) return;
+
+    lineas.forEach(function (item, i) {
+      var block = buildUnitBlock(item, i);
+      unitsSection.appendChild(block);
+      if (unitsMenu && item.titulo) {
+        var a = document.createElement("a");
+        a.href = "#" + block.id;
+        a.textContent = item.titulo;
+        unitsMenu.appendChild(a);
+      }
+    });
+
+    observeReveal(Array.prototype.slice.call(unitsSection.querySelectorAll(".reveal")));
+    initUnitSlideshows(unitsSection);
+  }
+
+  /* ============================================================
      Buscador de productos
      ============================================================ */
   var searchForm = document.getElementById("headerSearchForm");
@@ -454,37 +574,43 @@
   }
 
   /* ============================================================
-     Scroll reveal
+     Scroll reveal (reusable: tambien se aplica a bloques que se
+     generan despues, como las Lineas de Negocio)
      ============================================================ */
-  var revealEls = Array.prototype.slice.call(document.querySelectorAll(".reveal"));
-  if ("IntersectionObserver" in window && revealEls.length) {
-    var observer = new IntersectionObserver(function (entries) {
-      entries.forEach(function (entry) {
-        if (entry.isIntersecting) {
-          entry.target.classList.add("is-visible");
-          observer.unobserve(entry.target);
-        }
-      });
-    }, { threshold: 0.15 });
-    revealEls.forEach(function (el) { observer.observe(el); });
-  } else {
-    revealEls.forEach(function (el) { el.classList.add("is-visible"); });
+  var revealObserver = ("IntersectionObserver" in window)
+    ? new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("is-visible");
+            revealObserver.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.15 })
+    : null;
+  function observeReveal(els) {
+    if (revealObserver) els.forEach(function (el) { revealObserver.observe(el); });
+    else els.forEach(function (el) { el.classList.add("is-visible"); });
   }
+  observeReveal(Array.prototype.slice.call(document.querySelectorAll(".reveal")));
 
   /* ============================================================
-     Mini-slideshows de imagenes (unit-visual)
+     Mini-slideshows de imagenes (unit-visual). Reusable para que
+     tambien funcione en los bloques generados dinamicamente.
      ============================================================ */
-  document.querySelectorAll(".unit-slideshow").forEach(function (box) {
-    var slides = Array.prototype.slice.call(box.querySelectorAll(".unit-slide"));
-    if (slides.length < 2) return;
-    var interval = parseInt(box.getAttribute("data-interval"), 10) || 3000;
-    var i = 0;
-    window.setInterval(function () {
-      slides[i].classList.remove("is-active");
-      i = (i + 1) % slides.length;
-      slides[i].classList.add("is-active");
-    }, interval);
-  });
+  function initUnitSlideshows(root) {
+    Array.prototype.slice.call((root || document).querySelectorAll(".unit-slideshow")).forEach(function (box) {
+      var slides = Array.prototype.slice.call(box.querySelectorAll(".unit-slide"));
+      if (slides.length < 2) return;
+      var interval = parseInt(box.getAttribute("data-interval"), 10) || 3500;
+      var i = 0;
+      window.setInterval(function () {
+        slides[i].classList.remove("is-active");
+        i = (i + 1) % slides.length;
+        slides[i].classList.add("is-active");
+      }, interval);
+    });
+  }
+  initUnitSlideshows(document);
 
   /* ============================================================
      Banner de cookies
@@ -771,7 +897,11 @@
       var raw = window.localStorage.getItem(CATALOG_CACHE_KEY);
       var parsed = raw && JSON.parse(raw);
       if (!parsed || !Array.isArray(parsed.productos)) return null;
-      return { productos: parsed.productos, promociones: Array.isArray(parsed.promociones) ? parsed.promociones : [] };
+      return {
+        productos: parsed.productos,
+        promociones: Array.isArray(parsed.promociones) ? parsed.promociones : [],
+        lineasNegocio: Array.isArray(parsed.lineasNegocio) ? parsed.lineasNegocio : []
+      };
     } catch (err) {
       return null; // localStorage no disponible (modo privado, etc.)
     }
@@ -780,7 +910,7 @@
   function saveCatalogCache(data) {
     try {
       window.localStorage.setItem(CATALOG_CACHE_KEY, JSON.stringify({
-        productos: data.productos, promociones: data.promociones, ts: Date.now()
+        productos: data.productos, promociones: data.promociones, lineasNegocio: data.lineasNegocio, ts: Date.now()
       }));
     } catch (err) { /* sin cache, no pasa nada grave */ }
   }
@@ -789,11 +919,12 @@
     document.body.classList.add("prices-ready");
   };
 
-  if (Object.keys(catalogGrids).length || promoStrip) {
+  if (Object.keys(catalogGrids).length || promoStrip || unitsSection) {
     var cachedCatalog = loadCatalogCache();
     if (cachedCatalog) {
       renderCatalog(cachedCatalog.productos);
       renderPromoStrip(cachedCatalog.promociones);
+      renderUnitsSection(cachedCatalog.lineasNegocio);
       revealCatalog();
     } else {
       showCatalogSkeletons();
@@ -805,6 +936,7 @@
         .then(function (data) {
           renderCatalog(data.productos || []);
           renderPromoStrip(data.promociones || []);
+          renderUnitsSection(data.lineasNegocio || []);
           saveCatalogCache(data);
           revealCatalog();
         })

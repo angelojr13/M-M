@@ -536,12 +536,8 @@ button { font-family: inherit; cursor: pointer; }
 .units-section .section-title { max-width: none; }
 
 .unit-block { padding-block: var(--space-6); }
-#carnes-selectas.unit-block { padding-top: var(--space-4); padding-bottom: var(--space-6); }
-.unit-block-alt { border-block: 1px solid var(--color-line); }
-#catering-criollo.unit-block-alt { background: var(--color-black); border-bottom: none; }
-.sustainability-block { background: var(--color-black-soft); padding-block: var(--space-3); border-top: none; }
+.unit-block-alt { border-block: 1px solid var(--color-line); background: var(--color-black); border-bottom: none; }
 .impact-section { background: var(--color-black); border-top: 1px solid var(--color-line); padding-block: var(--space-3); }
-.sustainability-block .unit-block:first-child { padding-top: var(--space-5); }
 
 .unit-grid {
   display: grid;
@@ -552,11 +548,6 @@ button { font-family: inherit; cursor: pointer; }
 .unit-block-alt .unit-grid { grid-template-columns: 1.15fr 0.85fr; }
 .unit-block-alt .unit-copy { order: 1; }
 .unit-block-alt .unit-visual { order: 2; }
-
-/* Herencia Organica: imagen a la izquierda, texto a la derecha (invierte el .unit-block-alt heredado de la seccion) */
-#herencia-organica .unit-grid { grid-template-columns: 0.85fr 1.15fr; }
-#herencia-organica .unit-copy { order: 2; }
-#herencia-organica .unit-visual { order: 1; }
 
 .unit-kicker {
   font-family: var(--font-display);
@@ -1363,13 +1354,11 @@ button { font-family: inherit; cursor: pointer; }
   .origin-grid { grid-template-columns: 1fr; gap: var(--space-5); }
   .origin-stat { justify-self: start; }
 
-  .unit-grid, .unit-block-alt .unit-grid, #herencia-organica .unit-grid {
+  .unit-grid, .unit-block-alt .unit-grid {
     grid-template-columns: 1fr;
   }
-  .unit-block-alt .unit-copy { order: 1; }
-  .unit-block-alt .unit-visual { order: 2; }
-  #herencia-organica .unit-copy { order: 1; }
-  #herencia-organica .unit-visual { order: 2; }
+  .unit-copy { order: 1; }
+  .unit-visual { order: 2; }
   .unit-visual { max-width: 420px; }
 
   .impact-grid { grid-template-columns: 1fr; }
@@ -1568,11 +1557,8 @@ button { font-family: inherit; cursor: pointer; }
 .newsletter-bar { padding-top: var(--sec-pad-top); padding-bottom: var(--sec-pad-bottom); }
 .indicators-head { padding-top: var(--sec-pad-top); }
 .indicators-list { padding-bottom: var(--sec-pad-bottom); }
-.units-section,
-.sustainability-block { padding-block: 0; }
-.unit-block,
-#carnes-selectas.unit-block,
-.sustainability-block .unit-block:first-child { padding-top: var(--sec-pad-top); padding-bottom: var(--sec-pad-bottom); }
+.units-section { padding-block: 0; }
+.unit-block { padding-top: var(--sec-pad-top); padding-bottom: var(--sec-pad-bottom); }
 .impact-section { padding-block: 0; }
 .impact-inner { padding-top: var(--sec-pad-top); padding-bottom: var(--sec-pad-bottom); }
 
