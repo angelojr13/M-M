@@ -209,9 +209,9 @@
     promoStrip.className = "catalog-promos container";
 
     if (!promociones || !promociones.length) {
-      promoStrip.classList.add("has-0-side");
+      promoStrip.classList.add("has-0");
       var empty = document.createElement("a");
-      empty.className = "promo-main promo-empty";
+      empty.className = "promo-card promo-empty";
       empty.target = "_blank";
       empty.rel = "noopener";
       empty.href = buildWhatsAppLink(WHATSAPP_MESSAGES.promos);
@@ -243,44 +243,25 @@
       return wrap;
     };
 
-    // Rectángulo grande: siempre la primera oferta de la lista (ya viene
-    // ordenada por la columna "Orden" del Sheet).
-    var principal = promociones[0];
-    var promoMain = promoEl("a", "promo-main");
-    promoMain.href = buildWhatsAppLink(principal.mensajeWhatsapp || WHATSAPP_MESSAGES.promos);
-    promoMain.target = "_blank";
-    promoMain.rel = "noopener";
-    var mainMedia = promoEl("span", "promo-media");
-    mainMedia.appendChild(buildPromoImage(principal));
-    var mainCopy = promoEl("span", "promo-copy");
-    mainCopy.appendChild(promoEl("span", "promo-badge", principal.badge || "Oferta"));
-    mainCopy.appendChild(promoEl("span", "promo-name", principal.nombre));
-    mainCopy.appendChild(promoPrices(principal));
-    mainCopy.appendChild(promoEl("span", "promo-cta", "Quiero ver las promociones →"));
-    promoMain.appendChild(mainMedia);
-    promoMain.appendChild(mainCopy);
-    promoStrip.appendChild(promoMain);
-
-    // Cuadritos a la derecha: el resto de ofertas de la lista
-    var sideCount = 0;
-    for (var k = 1; k < promociones.length; k++) {
-      var p = promociones[k];
+    // Una tarjeta por cada fila "Publicar = Si" del Sheet, todas del mismo
+    // tamaño (2 por fila, 50% cada una). No hay límite de cuántas puede haber:
+    // la grilla simplemente agrega más filas al agregar más promociones.
+    promociones.forEach(function (p) {
       var card = promoEl("a", "promo-card");
       card.target = "_blank";
       card.rel = "noopener";
-      card.href = buildWhatsAppLink(p.mensajeWhatsapp || ("Hola MACHES, me interesa la oferta de " + p.nombre + " a " + (p.ahora || "") + (p.unidad ? " " + p.unidad : "") + ". ¿Sigue disponible?"));
+      card.href = buildWhatsAppLink(p.mensajeWhatsapp || ("Hola MACHES, me interesa la oferta de " + p.nombre + (p.ahora ? " a " + p.ahora + (p.unidad ? " " + p.unidad : "") : "") + ". ¿Sigue disponible?"));
       var cardMedia = promoEl("span", "promo-media");
       cardMedia.appendChild(buildPromoImage(p));
       var cardCopy = promoEl("span", "promo-copy");
-      cardCopy.appendChild(promoEl("span", "promo-badge promo-badge-sm", p.badge || "Oferta"));
+      cardCopy.appendChild(promoEl("span", "promo-badge", p.badge || "Oferta"));
       cardCopy.appendChild(promoEl("span", "promo-name", p.nombre));
       cardCopy.appendChild(promoPrices(p));
+      cardCopy.appendChild(promoEl("span", "promo-cta", "Ver oferta →"));
       card.appendChild(cardMedia);
       card.appendChild(cardCopy);
       promoStrip.appendChild(card);
-      sideCount++;
-    }
-    promoStrip.classList.add("has-" + sideCount + "-side");
+    });
   }
 
   /* ============================================================
